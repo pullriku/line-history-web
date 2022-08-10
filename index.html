@@ -1,3 +1,6 @@
+<!--
+    version 1.0
+-->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>LINE History Viewer</title>
+    <title>History Viewer</title>
 </head>
 <body>
     <div id="titleBar">
         <div id="titleBarContents">
-            <h1>History Viewer</h1><p id="ver">ver. 1.0</p>
+            <h1>History Viewer</h1><p id="ver">ver 1.0</p>
         </div>
     </div>
     <div class="menu">
@@ -19,16 +22,23 @@
             <input type="file", id="file">
         </p>
         <p>
-            <label for="dateTimeInput">日付を選択: </label>
-            <input type="date" id="dateTimeInput">
-            <input type="button" id="dateSubmitButton" value="確定">
+            <label for="textField">日付やコマンド，管理番号を入力: </label>
+            <input type="text" id="inputText" required minlength="5" size="20">
+            <button type="button" id="submitButton" disabled>確定</button>
         </p>
     </div>
-    <div id="outputField"/>
+    <div id="outputField">
+        
     </div>
+
     <div class="menu">
+        <p>
+            <label for="textField2">日付やコマンド，管理番号を入力: </label>
+            <input type="text" id="inputText2" required minlength="5" size="20">
+            <button type="button" id="submitButton2" disabled>確定</button>
+        </p>
     </div>
     <script src="emaki.js"></script>
-    <p style="text-align: center;"><small>&copy;2022 Tyomo</small></p>
+    <small>&copy;2022 Tyomo</small>
 </body>
 </html>

@@ -1,3 +1,6 @@
+let div = document.getElementById("outputField");
+div.innerHTML = "Welcome back!<br>";
+
 class LogText{
     constructor(logText, userInputText){
         this.logText = logText;
@@ -8,10 +11,6 @@ class LogText{
         this.output = "";
         this.dateSelected = new Date();
         this.logTextSplited = [];
-
-        if(logText == ""){
-            this.output = "error: 履歴ファイルが正しく読み込まれませんでした。";
-        }
 
         for(let i = 0; i < (5 - this.userInput.length); i++){
             this.userInput.push("");
@@ -60,10 +59,6 @@ class LogText{
                     var date_ = new Date(year[0], monthAndDay[2] - 1, monthAndDay[3]);
                     console.log(date_);
                 }
-                /*
-                console.log(year);
-                console.log(monthAndDay);
-                */
             
                 if(date_.getTime() === this.dateSelected.getTime()){
                     console.log(date_);
@@ -71,17 +66,21 @@ class LogText{
                     countStart = i;
                     countToggle = true;
                     this.output += "＊" + log + "<br>";
+                    continue;
                 }else if(countToggle == true && i > countStart){
                     countStop = i;
                     break;
+                }else{
+                    continue;
                 }
             }else if(countToggle == true){
-                this.output += "＊" + log + "<br>";
+                this.output += "＊" + log.replace("\t", "&#009;") + "<br>";
                 if((i + 1) == this.logTextSplited.length){
                     countStop = i;
                     daynumber += 1;
                     break;
                 }
+                continue;
             }
         }
 
@@ -96,28 +95,39 @@ class LogText{
 }
 
 console.log("ieieeeeieieiei");
-let div = document.getElementById("outputField");
-const dateTimeInput = document.getElementById("dateTimeInput");
+
 const inputField = document.getElementById("inputText");
 const inputField2 = document.getElementById("inputText2");
 const button = document.getElementById("submitButton");
 const button2 = document.getElementById("submitButton2");
-const dateSubmitButton = document.getElementById("dateSubmitButton");
 const fileField = document.getElementById("file");
 
-div.innerHTML = "Welcome back!<br>";
 let inputText = "";
 let inputText2 = "";
 
-const test = new Date(2020, 2, 3);
-console.log(test.getFullYear() + "/" + test.getMonth() + "/" + test.getDay());
+inputField.addEventListener("keyup", (e) => {
+    inputText = e.target.value;
+    if(5 <= e.target.value.length){
+        button.disabled = false;
+    }else{
+        button.disabled = true;
+    }
+});
+
+inputField2.addEventListener("keyup", (e2)=>{
+    inputText2 = e2.target.value;
+    if(5 <= e2.target.value.length){
+        button2.disabled = false;
+    }else{
+        button2.disabled = true;
+    }
+});
 
 button.addEventListener("click", onButtonClick);
 button2.addEventListener("click", onButtonClick2);
-dateSubmitButton.addEventListener("click", onDateButtonClick);
 
 let file;
-let text = "";
+let text;
 fileField.addEventListener("change", function(evt){
     file = evt.target.files;
     var reader = new FileReader();
@@ -138,18 +148,10 @@ function onButtonClick2(){
     emakiMain(inputText2)
 }
 
-function onDateButtonClick(){
-    emakiMain(dateTimeInput.value.replace(/-/g, "/"));
-}
-
-// Debug
-function linkTest() {
-    console.log("BTN test!!!");
-}
-
 function emakiMain(input){
     const reader = new FileReader();   
     let lineHistory = new LogText(text, input);
     lineHistory.analysis();
+    let div = document.getElementById("outputField");
     div.innerHTML = `${lineHistory.output}`;
 }
