@@ -1,6 +1,3 @@
-let div = document.getElementById("outputField");
-div.innerHTML = "Welcome back!<br>";
-
 class LogText{
     constructor(logText, userInputText){
         this.logText = logText;
@@ -94,37 +91,42 @@ class LogText{
     }
 }
 
-console.log("ieieeeeieieiei");
+console.log("start up");
 
+let div = document.getElementById("outputField");
+const dateTimeInput = document.getElementById("dateTimeInput");
 const inputField = document.getElementById("inputText");
 const inputField2 = document.getElementById("inputText2");
 const button = document.getElementById("submitButton");
 const button2 = document.getElementById("submitButton2");
+const dateSubmitButton = document.getElementById("dateSubmitButton");
 const fileField = document.getElementById("file");
 
+div.innerHTML = "Welcome back!<br>";
 let inputText = "";
 let inputText2 = "";
 
-inputField.addEventListener("keyup", (e) => {
-    inputText = e.target.value;
-    if(5 <= e.target.value.length){
-        button.disabled = false;
-    }else{
-        button.disabled = true;
-    }
-});
+// inputField.addEventListener("keyup", (e) => {
+//     inputText = e.target.value;
+//     if(5 <= e.target.value.length){
+//         button.disabled = false;
+//     }else{
+//         button.disabled = true;
+//     }
+// });
 
-inputField2.addEventListener("keyup", (e2)=>{
-    inputText2 = e2.target.value;
-    if(5 <= e2.target.value.length){
-        button2.disabled = false;
-    }else{
-        button2.disabled = true;
-    }
-});
+// inputField2.addEventListener("keyup", (e2)=>{
+//     inputText2 = e2.target.value;
+//     if(5 <= e2.target.value.length){
+//         button2.disabled = false;
+//     }else{
+//         button2.disabled = true;
+//     }
+// });
 
-button.addEventListener("click", onButtonClick);
-button2.addEventListener("click", onButtonClick2);
+// button.addEventListener("click", onButtonClick);
+// button2.addEventListener("click", onButtonClick2);
+dateSubmitButton.addEventListener("click", onDateButtonClick)
 
 let file;
 let text;
@@ -138,14 +140,18 @@ fileField.addEventListener("change", function(evt){
     }
 }, false)
 
-function onButtonClick(){
-    console.log("button clicked!");
-    emakiMain(inputText);
-}
+// function onButtonClick(){
+//     console.log("button clicked!");
+//     emakiMain(inputText);
+// }
 
-function onButtonClick2(){
-    console.log("button2 clicked!!");
-    emakiMain(inputText2)
+// function onButtonClick2(){
+//     console.log("button2 clicked!!");
+//     emakiMain(inputText2)
+// }
+
+function onDateButtonClick(){
+    emakiMain(dateTimeInput.value.replace(/-/g, "/"));
 }
 
 function emakiMain(input){
