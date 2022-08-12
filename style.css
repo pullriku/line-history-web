@@ -39,3 +39,11 @@ html, body{
 small{
     padding: 0;
 }
+
+p{
+    color: black;
+}
+
+.settings {
+    text-align: right;
+}

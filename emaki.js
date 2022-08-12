@@ -91,7 +91,6 @@ class LogText{
     }
 }
 
-console.log("start up");
 
 let div = document.getElementById("outputField");
 const dateTimeInput = document.getElementById("dateTimeInput");
@@ -101,6 +100,8 @@ const button = document.getElementById("submitButton");
 const button2 = document.getElementById("submitButton2");
 const dateSubmitButton = document.getElementById("dateSubmitButton");
 const fileField = document.getElementById("file");
+const displayModeSwitch = document.getElementById("displayModeSwitch");
+let isLightMode = true;
 
 div.innerHTML = "Welcome back!<br>";
 let inputText = "";
@@ -139,6 +140,34 @@ fileField.addEventListener("change", function(evt){
         text = reader.result;
     }
 }, false)
+
+displayModeSwitch.addEventListener("click", ()=>{
+    isLightMode = !isLightMode;
+
+    if(isLightMode){
+        document.getElementsByTagName("html")[0].style.backgroundColor = "#f0f8ff";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "#f0f8ff";
+        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            element.style.color = "black"
+        })
+        document.getElementById("ver").style.color = "black";
+        let of = document.getElementById("outputField");
+        of.style.backgroundColor = "white";
+        of.style.color = "black";
+        document.getElementsByTagName("small")[0].style.color = "black";
+    }else{
+        document.getElementsByTagName("html")[0].style.backgroundColor = "#181818";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "#181818";
+        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            element.style.color = "white"
+        })
+        document.getElementById("ver").style.color = "black";
+        let of = document.getElementById("outputField");
+        of.style.backgroundColor = "black";
+        of.style.color = "white"
+        document.getElementsByTagName("small")[0].style.color = "white";
+    }
+});
 
 // function onButtonClick(){
 //     console.log("button clicked!");
