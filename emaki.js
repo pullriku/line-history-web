@@ -161,7 +161,7 @@ displayModeSwitch.addEventListener("click", ()=>{
         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
             element.style.color = "white"
         })
-        document.getElementById("ver").style.color = "black";
+        document.getElementById("ver").style.color = "white";
         let of = document.getElementById("outputField");
         of.style.backgroundColor = "black";
         of.style.color = "white"
