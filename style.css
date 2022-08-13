@@ -32,8 +32,7 @@ html, body{
 }
 
 #ver{
-    margin-left: 0%;
-    padding-left: 0%;
+    float: right;
 }
 
 small{
@@ -42,8 +41,4 @@ small{
 
 p{
     color: black;
-}
-
-a{
-    text-decoration: none;
 }
