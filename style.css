@@ -43,3 +43,7 @@ small{
 p{
     color: black;
 }
+
+a{
+    text-decoration: none;
+}
