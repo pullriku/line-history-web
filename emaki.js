@@ -102,6 +102,7 @@ class LogText{
         let maxDate = new Date(2000, 1, 1);
         let date =  new Date(2000, 1, 1);
         let day = new Date(2000, 1, 1);
+        let counter = 0;
 
         if(searchWord.length >= 2){
             this.logTextSplited.forEach((log) =>{
@@ -115,6 +116,7 @@ class LogText{
                     }
                 }else{
                     if(log.includes(searchWord)){
+                        counter++;
                         if(/\d{2}:\d{2}.*/.test(log)){
                             log = log.substring(6);
                         }
@@ -126,14 +128,13 @@ class LogText{
                     }
                 }
             })
+            this.output = counter + "件の検索結果:<br><br>" + this.output;
         }else{
             this.output = "2文字以上入力してください。";
         }
     }
 }
 
-
-let div = document.getElementById("outputField");
 const dateTimeInput = document.getElementById("dateTimeInput");
 const wordInput = document.getElementById("wordInput");
 let inputWord = "";
@@ -144,7 +145,13 @@ const displayModeSwitch = document.getElementById("displayModeSwitch");
 let isLightMode = true;
 const outputField = document.getElementById("outputField");
 
-div.innerHTML = "Welcome back!<br>";
+outputField.innerHTML = `
+<br>
+<br>
+Welcome back!<br>
+<br>
+<br>
+`;
 
 wordInput.addEventListener("keyup", (e) =>{
     inputWord = e.target.value;
@@ -167,6 +174,8 @@ fileField.addEventListener("change", function(evt){
 
     reader.onload = function(ev){
         text = reader.result;
+        dateSubmitButton.disabled = false;
+        wordSubmitButton.disabled = false;
     }
 }, false)
 
