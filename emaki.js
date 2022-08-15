@@ -1,4 +1,5 @@
 class LogText{
+
     constructor(logText, userInputText){
         this.logText = logText;
         this.userInput = userInputText.split(" ");
@@ -33,6 +34,13 @@ class LogText{
             }
         });
         */
+    }
+
+    getOutput(){
+        if(this.output == ""){
+            this.output = "見つかりませんでした。";
+        }
+        return this.output
     }
 
     analysis(){
@@ -89,51 +97,72 @@ class LogText{
         this.countStop = countStop;
         this.daynumber = daynumber;
     }
+
+    wordSearch(searchWord = ""){
+        let maxDate = new Date(2000, 1, 1);
+        let date =  new Date(2000, 1, 1);
+        let day = new Date(2000, 1, 1);
+
+        if(searchWord.length >= 2){
+            this.logTextSplited.forEach((log) =>{
+                if(/20\d{2}\/\d{2}\/\d{2}.*/.test(log)){
+                    date = new Date(log.substring(0, 10));
+                    if(date.getTime() > maxDate.getTime()){
+                        maxDate = new Date(log.substring(0, 10));
+                        day =  new Date(log.substring(0, 10));
+                    }else{
+                        ;
+                    }
+                }else{
+                    if(log.includes(searchWord)){
+                        if(/\d{2}:\d{2}.*/.test(log)){
+                            log = log.substring(6);
+                        }
+                        if(log.length >= 61){
+                            log = log.substring(0, 60) + "...";
+                        }
+                        this.output += "<spam style='font-weight: bold;'>" + day.toISOString().substring(0, 10).replace(/-/g, "/") + "</spam>" + " " 
+                             + log  + "<br>";
+                    }
+                }
+            })
+        }else{
+            this.output = "2文字以上入力してください。";
+        }
+    }
 }
 
 
 let div = document.getElementById("outputField");
 const dateTimeInput = document.getElementById("dateTimeInput");
-const inputField = document.getElementById("inputText");
-const inputField2 = document.getElementById("inputText2");
-const button = document.getElementById("submitButton");
-const button2 = document.getElementById("submitButton2");
+const wordInput = document.getElementById("wordInput");
+let inputWord = "";
 const dateSubmitButton = document.getElementById("dateSubmitButton");
+const wordSubmitButton = document.getElementById("wordSubmitButton");
 const fileField = document.getElementById("file");
 const displayModeSwitch = document.getElementById("displayModeSwitch");
 let isLightMode = true;
+const outputField = document.getElementById("outputField");
 
 div.innerHTML = "Welcome back!<br>";
-let inputText = "";
-let inputText2 = "";
 
-// inputField.addEventListener("keyup", (e) => {
-//     inputText = e.target.value;
-//     if(5 <= e.target.value.length){
-//         button.disabled = false;
-//     }else{
-//         button.disabled = true;
-//     }
-// });
+wordInput.addEventListener("keyup", (e) =>{
+    inputWord = e.target.value;
 
-// inputField2.addEventListener("keyup", (e2)=>{
-//     inputText2 = e2.target.value;
-//     if(5 <= e2.target.value.length){
-//         button2.disabled = false;
-//     }else{
-//         button2.disabled = true;
-//     }
-// });
+})
 
-// button.addEventListener("click", onButtonClick);
-// button2.addEventListener("click", onButtonClick2);
-dateSubmitButton.addEventListener("click", onDateButtonClick)
+dateSubmitButton.addEventListener("click", ()=>{
+    dateSearch(dateTimeInput.value.replace(/-/g, "/"))
+})
+wordSubmitButton.addEventListener("click", ()=>{
+    wordSearch(inputWord);
+})
 
 let file;
 let text;
 fileField.addEventListener("change", function(evt){
     file = evt.target.files;
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.readAsText(file[0]);
 
     reader.onload = function(ev){
@@ -169,24 +198,14 @@ displayModeSwitch.addEventListener("click", ()=>{
     }
 });
 
-// function onButtonClick(){
-//     console.log("button clicked!");
-//     emakiMain(inputText);
-// }
-
-// function onButtonClick2(){
-//     console.log("button2 clicked!!");
-//     emakiMain(inputText2)
-// }
-
-function onDateButtonClick(){
-    emakiMain(dateTimeInput.value.replace(/-/g, "/"));
-}
-
-function emakiMain(input){
-    const reader = new FileReader();   
+function dateSearch(input){
     let lineHistory = new LogText(text, input);
     lineHistory.analysis();
-    let div = document.getElementById("outputField");
-    div.innerHTML = `${lineHistory.output}`;
+    outputField.innerHTML = `${lineHistory.getOutput()}`;
+}
+
+function wordSearch(input){
+    let lineHistory = new LogText(text, "2020/01/01");
+    lineHistory.wordSearch(input);
+    outputField.innerHTML = lineHistory.getOutput();
 }

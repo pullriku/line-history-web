@@ -18,20 +18,27 @@
         <div class="settings">
             <button type="button" id="displayModeSwitch">🌝 🌚</button>
             <button type="button" onclick="location.href='versions.html'">🔄</button>
-            <span id="ver">ver 1.3.2</span>
+            <span id="ver">ver 1.4</span>
             <hr>
         </div>
     </p>
     <div class="menu">
         <p>
-            1️⃣履歴ファイルを選択: 
+            📝履歴ファイルを選択: 
             <input type="file", id="file">
+            <hr>
         </p>
         <p>
-            <label for="dateTimeInput">2️⃣日付を選択: </label>
+            <label for="dateTimeInput">📅日付で検索: </label>
             <input type="date" id="dateTimeInput">
             <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
             <button type="button" id="dateSubmitButton">確定</button>
+        </p>
+        <p>
+            <label for="dateTimeInput">💬メッセージを検索: </label>
+            <input type="text" id="wordInput">
+            <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
+            <button type="button" id="wordSubmitButton">確定</button>
         </p>
     </div>
     <div id="outputField">
