@@ -1,6 +1,6 @@
 class LogText{
 
-    constructor(logText, userInputText){
+    constructor(logText = "", userInputText = ""){
         this.logText = logText;
         this.userInput = userInputText.split(" ");
         this.countStart = 0;
@@ -38,7 +38,11 @@ class LogText{
 
     getOutput(){
         if(this.output == ""){
-            this.output = "見つかりませんでした。";
+            if(this.logText == ""){
+                this.output = "履歴ファイルを選択してください。";
+            }else{
+                this.output = "見つかりませんでした。";
+            }
         }
         return this.output
     }
@@ -174,8 +178,6 @@ fileField.addEventListener("change", function(evt){
 
     reader.onload = function(ev){
         text = reader.result;
-        dateSubmitButton.disabled = false;
-        wordSubmitButton.disabled = false;
     }
 }, false)
 
