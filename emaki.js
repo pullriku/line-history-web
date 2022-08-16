@@ -46,7 +46,7 @@ class LogText{
     }
 
     analysis(){
-        const datePattern = /20\d{2}\/\d{2}\/\d{2}.*/;
+        const datePattern = /^20\d{2}\/\d{2}\/\d{2}.*/;
         let countStart = 0;
         let countStop = 0;
         let countToggle = false;
@@ -102,20 +102,16 @@ class LogText{
 
     wordSearch(searchWord = ""){
         let maxDate = new Date(2000, 1, 1);
-        let date =  new Date(2000, 1, 1);
         let day = new Date(2000, 1, 1);
         let counter = 0;
 
         if(searchWord.length >= 1){
-            if(searchWord.length == 1) this.output += "⚠️一文字検索は非推奨です。<br><br>"
+            if(searchWord.length == 1) this.output += "⚠️一文字検索は非推奨です。<br><br>";
             this.logTextSplited.forEach((log) =>{
-                if(/20\d{2}\/\d{2}\/\d{2}.*/.test(log)){
-                    date = new Date(log.substring(0, 10));
-                    if(date.getTime() > maxDate.getTime()){
+                if(/^20\d{2}\/\d{2}\/\d{2}.*/.test(log)){
+                    if(new Date(log.substring(0, 10)).getTime() > maxDate.getTime()){
                         maxDate = new Date(log.substring(0, 10));
                         day =  new Date(log.substring(0, 10));
-                    }else{
-                        ;
                     }
                 }else{
                     if(log.includes(searchWord)){
@@ -126,11 +122,11 @@ class LogText{
                         if(log.length >= 61){
                             log = log.substring(0, 60) + "...";
                         }
-                        this.output += "<spam style='font-weight: bold;'>" + day.toISOString().substring(0, 10).replace(/-/g, "/") + "</spam>" + " " 
+                        this.output += "<spam style='font-weight: bold;'>" + day.toLocaleString("ja-jp").substring(0, 10).replace(/-/g, "/") + "</spam>" + " " 
                              + log  + "<br>";
                     }
                 }
-            })
+            });
             this.output = counter + "件の検索結果:<br><br>" + this.output;
         }else{
             this.output = "1文字以上入力してください。";
@@ -160,17 +156,17 @@ Welcome back!<br>
 wordInput.addEventListener("keyup", (e) =>{
     inputWord = e.target.value;
 
-})
+});
 
 dateSubmitButton.addEventListener("click", ()=>{
     dateSearch(dateTimeInput.value.replace(/-/g, "/"))
-})
+});
 wordSubmitButton.addEventListener("click", ()=>{
     wordSearch(inputWord);
-})
+});
 
 let file;
-let text;
+let text = "";
 fileField.addEventListener("change", function(evt){
     file = evt.target.files;
     let reader = new FileReader();
@@ -179,7 +175,7 @@ fileField.addEventListener("change", function(evt){
     reader.onload = function(ev){
         text = reader.result;
     }
-}, false)
+}, false);
 
 displayModeSwitch.addEventListener("click", ()=>{
     isLightMode = !isLightMode;
@@ -204,24 +200,24 @@ function setDisplayMode(){
         document.getElementsByTagName("body")[0].style.backgroundColor = "#f0f8ff";
         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
             element.style.color = "black"
-        })
+        });
         document.getElementById("ver").style.color = "black";
         let of = document.getElementById("outputField");
         of.style.backgroundColor = "white";
         of.style.color = "black";
         document.getElementsByTagName("small")[0].style.color = "black";
-        displayModeSwitch.innerHTML = "🌚ダーク"
+        displayModeSwitch.innerHTML = "🌚ダーク";
     }else{
         document.getElementsByTagName("html")[0].style.backgroundColor = "#181818";
         document.getElementsByTagName("body")[0].style.backgroundColor = "#181818";
         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
             element.style.color = "white"
-        })
+        });
         document.getElementById("ver").style.color = "white";
         let of = document.getElementById("outputField");
         of.style.backgroundColor = "black";
         of.style.color = "white"
         document.getElementsByTagName("small")[0].style.color = "white";
-        displayModeSwitch.innerHTML = "🌝ライト"
+        displayModeSwitch.innerHTML = "🌝ライト";
     }
 }
