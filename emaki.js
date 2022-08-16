@@ -106,7 +106,8 @@ class LogText{
         let day = new Date(2000, 1, 1);
         let counter = 0;
 
-        if(searchWord.length >= 2){
+        if(searchWord.length >= 1){
+            if(searchWord.length == 1) this.output += "⚠️一文字検索は非推奨です。<br><br>"
             this.logTextSplited.forEach((log) =>{
                 if(/20\d{2}\/\d{2}\/\d{2}.*/.test(log)){
                     date = new Date(log.substring(0, 10));
@@ -132,7 +133,7 @@ class LogText{
             })
             this.output = counter + "件の検索結果:<br><br>" + this.output;
         }else{
-            this.output = "2文字以上入力してください。";
+            this.output = "1文字以上入力してください。";
         }
     }
 }
@@ -144,8 +145,9 @@ const dateSubmitButton = document.getElementById("dateSubmitButton");
 const wordSubmitButton = document.getElementById("wordSubmitButton");
 const fileField = document.getElementById("file");
 const displayModeSwitch = document.getElementById("displayModeSwitch");
-let isLightMode = true;
 const outputField = document.getElementById("outputField");
+let isLightMode = true;
+setDisplayMode();
 
 outputField.innerHTML = `
 <br>
@@ -181,30 +183,7 @@ fileField.addEventListener("change", function(evt){
 
 displayModeSwitch.addEventListener("click", ()=>{
     isLightMode = !isLightMode;
-
-    if(isLightMode){
-        document.getElementsByTagName("html")[0].style.backgroundColor = "#f0f8ff";
-        document.getElementsByTagName("body")[0].style.backgroundColor = "#f0f8ff";
-        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-            element.style.color = "black"
-        })
-        document.getElementById("ver").style.color = "black";
-        let of = document.getElementById("outputField");
-        of.style.backgroundColor = "white";
-        of.style.color = "black";
-        document.getElementsByTagName("small")[0].style.color = "black";
-    }else{
-        document.getElementsByTagName("html")[0].style.backgroundColor = "#181818";
-        document.getElementsByTagName("body")[0].style.backgroundColor = "#181818";
-        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-            element.style.color = "white"
-        })
-        document.getElementById("ver").style.color = "white";
-        let of = document.getElementById("outputField");
-        of.style.backgroundColor = "black";
-        of.style.color = "white"
-        document.getElementsByTagName("small")[0].style.color = "white";
-    }
+    setDisplayMode();
 });
 
 function dateSearch(input){
@@ -217,4 +196,32 @@ function wordSearch(input){
     let lineHistory = new LogText(text, "2020/01/01");
     lineHistory.wordSearch(input);
     outputField.innerHTML = lineHistory.getOutput();
+}
+
+function setDisplayMode(){
+    if(isLightMode){
+        document.getElementsByTagName("html")[0].style.backgroundColor = "#f0f8ff";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "#f0f8ff";
+        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            element.style.color = "black"
+        })
+        document.getElementById("ver").style.color = "black";
+        let of = document.getElementById("outputField");
+        of.style.backgroundColor = "white";
+        of.style.color = "black";
+        document.getElementsByTagName("small")[0].style.color = "black";
+        displayModeSwitch.innerHTML = "🌚ダーク"
+    }else{
+        document.getElementsByTagName("html")[0].style.backgroundColor = "#181818";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "#181818";
+        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            element.style.color = "white"
+        })
+        document.getElementById("ver").style.color = "white";
+        let of = document.getElementById("outputField");
+        of.style.backgroundColor = "black";
+        of.style.color = "white"
+        document.getElementsByTagName("small")[0].style.color = "white";
+        displayModeSwitch.innerHTML = "🌝ライト"
+    }
 }
