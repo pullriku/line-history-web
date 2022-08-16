@@ -37,12 +37,10 @@ class LogText{
     }
 
     getOutput(){
-        if(this.output == ""){
-            if(this.logText == ""){
-                this.output = "履歴ファイルを選択してください。";
-            }else{
-                this.output = "見つかりませんでした。";
-            }
+        if(this.logText == ""){
+            this.output = "履歴ファイルを選択してください。";
+        }else if(this.output == ""){
+            this.output = "見つかりませんでした。";
         }
         return this.output
     }
