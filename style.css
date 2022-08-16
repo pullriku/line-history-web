@@ -4,7 +4,6 @@ html, body{
 }
 #outputField {
     overflow-wrap: break-word;
-    width: 100%;
     padding-top: 20px;
     padding-bottom: 20px;
     font-family: monospace;
