@@ -3,6 +3,8 @@ class LogText{
     constructor(logText = "", userInputText = ""){
         this.logText = logText;
         this.userInput = userInputText.split(" ");
+        console.log("type: " + typeof this.userInput);
+        console.log(this.userInputText);
         this.countStart = 0;
         this.countStop = 0;
         this.daynumber = 0;
@@ -13,7 +15,7 @@ class LogText{
         for(let i = 0; i < (5 - this.userInput.length); i++){
             this.userInput.push("");
         }
-        console.log(this.userInput);
+
         // Python: 20\d{2}/\d{2}/\d{2}
         // 形式: 2020/01/12
         const reInputDate = /^20\d{2}\/\d{2}\/\d{2}/;
@@ -21,19 +23,18 @@ class LogText{
             const year = this.userInput[0].match(/20\d{2}/g);
             const monthAndDay = this.userInput[0].match(/\d{2}/g);
             this.dateSelected = new Date(year[0], monthAndDay[2] - 1, monthAndDay[3]);
-            console.log(this.dateSelected);
+        }
+        if(/^20\d{2}\/\d{1,2}\/\d{1,2}/.test(this.userInput[0])){
+            console.log("0なし表記の日付");
+            let splitDate = this.userInput[0].split("/");
+            const year = splitDate[0];
+            const month = splitDate[1];
+            const day = splitDate[2];
+            this.dateSelected = new Date(year, month - 1, day);
         }
 
         this.logTextSplited = logText.split("\n");
         this.logTextSplited.splice(0, 3);
-        //debug
-        /*
-        this.logTextSplited.forEach((element, i) => {
-            if(i < 20){
-                console.log(element);
-            }
-        });
-        */
     }
 
     getOutput(){
@@ -64,12 +65,9 @@ class LogText{
                     ;
                 }else{
                     var date_ = new Date(year[0], monthAndDay[2] - 1, monthAndDay[3]);
-                    console.log(date_);
                 }
             
                 if(date_.getTime() === this.dateSelected.getTime()){
-                    console.log(date_);
-                    console.log(this.dateSelected);
                     countStart = i;
                     countToggle = true;
                     this.output += "＊" + log + "<br>";
@@ -122,8 +120,16 @@ class LogText{
                         if(log.length >= 61){
                             log = log.substring(0, 60) + "...";
                         }
-                        this.output += "<spam style='font-weight: bold;'>" + day.toLocaleString("ja-jp").substring(0, 10).replace(/-/g, "/") + "</spam>" + " " 
-                             + log  + "<br>";
+                        // this.output += "<a href='javascript:wordSearch();'><spam style='font-weight: bold;'>"
+                        //  + day.toLocaleString("ja-jp").substring(0, 10).replace(/-/g, "/") + "</spam>" + " " + log  + "<br>";
+                        let spaceRemoveCounter = 0;
+                        if(day.getMonth() <= 8)spaceRemoveCounter++;
+                        if(day.getDate() <= 9)spaceRemoveCounter++;
+                        let dateOutput = day.toLocaleString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/");
+                        console.log(dateOutput);
+                        this.output += `
+                        <a href="javascript:dateSearch('${dateOutput}');"><spam style='font-weight: bold;'>${dateOutput}</spam></a> ${log}<br>
+                        `
                     }
                 }
             });
