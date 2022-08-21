@@ -202,26 +202,26 @@ function wordSearch(input){
 
 function setDisplayMode(){
     if(isLightMode){
-        document.getElementsByTagName("html")[0].style.backgroundColor = "#f0f8ff";
-        document.getElementsByTagName("body")[0].style.backgroundColor = "#f0f8ff";
-        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-            element.style.color = "black"
-        });
-        document.getElementById("ver").style.color = "black";
-        let of = document.getElementById("outputField");
-        of.style.backgroundColor = "white";
-        of.style.color = "black";
-        document.getElementsByTagName("small")[0].style.color = "black";
+        // document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";
+        // document.getElementsByTagName("body")[0].style.backgroundColor = "#F2F2F7";
+        // Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+        //     element.style.color = "black"
+        // });
+        // document.getElementById("ver").style.color = "black";
+        // let of = document.getElementById("outputField");
+        // of.style.backgroundColor = "white";
+        // of.style.color = "black";
+        // document.getElementsByTagName("small")[0].style.color = "black";
         displayModeSwitch.innerHTML = "🌚ダーク";
     }else{
-        document.getElementsByTagName("html")[0].style.backgroundColor = "#181818";
-        document.getElementsByTagName("body")[0].style.backgroundColor = "#181818";
+        document.getElementsByTagName("html")[0].style.backgroundColor = "black";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "black";
         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
             element.style.color = "white"
         });
         document.getElementById("ver").style.color = "white";
         let of = document.getElementById("outputField");
-        of.style.backgroundColor = "black";
+        of.style.backgroundColor = "#1C1C1E";
         of.style.color = "white"
         document.getElementsByTagName("small")[0].style.color = "white";
         displayModeSwitch.innerHTML = "🌝ライト";

@@ -1,8 +1,12 @@
-html, body{
-    /* margin: 5px; */
-    margin: 0.7%;
-    background-color:#f0f8ff;
+body{
+    margin: 0;
 }
+
+main{
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
 #outputField {
     overflow-wrap: break-word;
     padding-top: 20px;
@@ -13,28 +17,43 @@ html, body{
     background-color: white;
     border-radius: 20px;
     margin-bottom: 20px;
-    
-}
-
-.menu{
-    margin-top: 10px;
-    padding: 3px;
-    font-family: sans-serif;
-    /*background-color: aqua;*/
 }
 
 #titleBar{
+    width: 100%;
+    height:fit-content;
     font-family: sans-serif;
-    background-color: #CAE5CD;
-    border:1px solid gray;
-    border-radius: 20px;
+    background-color: rgb(247, 247, 247);
+    border-bottom: 0.5px solid gray;
+    display: flex;
+    box-sizing: border-box;
+    padding-left: 1.5%;
 }
 
-#titleBarContents{
+#titleBar ul{
+    display: flex;
+    list-style: none;
+}
+
+#titleBar ul li{
+    font-weight: bold;
+    font-size: x-large;
+    padding-right: 10px;
+    margin: auto;
+}
+
+#titleBar ul li img{
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: auto;
+}
+
+/* #titleBarContents{
     width:fit-content;
     margin: 0 auto;
     display: flex;
-}
+} */
 
 #ver{
     float: right;
