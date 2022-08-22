@@ -183,10 +183,10 @@ fileField.addEventListener("change", function(evt){
     }
 }, false);
 
-// displayModeSwitch.addEventListener("click", ()=>{
-//     isLightMode = !isLightMode;
-//     setDisplayMode();
-// });
+displayModeSwitch.addEventListener("click", ()=>{
+    isLightMode = !isLightMode;
+    setDisplayMode();
+});
 
 function dateSearch(input){
     let lineHistory = new LogText(text, input);
@@ -198,11 +198,6 @@ function wordSearch(input){
     let lineHistory = new LogText(text, "2020/01/01");
     lineHistory.wordSearch(input);
     outputField.innerHTML = lineHistory.getOutput();
-}
-
-function changeDisplayMode(){
-    isLightMode = !isLightMode;
-    setDisplayMode();
 }
 
 function setDisplayMode(){
