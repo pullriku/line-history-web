@@ -14,7 +14,7 @@ main{
     padding-bottom: 20px;
     padding-left: 2%;
     padding-right: 2;
-    font-family: monospace;
+    font-family: 'Courier New', Courier, monospace;
     background-color: white;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -72,24 +72,27 @@ nav ul{
 nav ul li{
     padding: 2px 10px;
     background-color: aqua;
-    margin-right: 10px;
+    margin-right: 5px;
     border-radius: 5px;
     border-bottom: 1px solid black;
+    font-size: small;
 }
 
 nav ul li a{
     text-decoration: none;
     color: black;
     font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 #ver{
     float: right;
-    width: max-content;
+    width: fit-content;
     height: min-content;
     /* margin-top: auto;
     margin-bottom: auto; */
     margin: auto 0 auto auto; /*上右下左*/
+    font-size: 0.1rem
 }
 
 .menu{
@@ -98,6 +101,7 @@ nav ul li a{
     background-color: rgb(229, 229, 251);
     border-radius: 20px;
     font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 hr{
