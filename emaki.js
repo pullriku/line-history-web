@@ -202,22 +202,28 @@ function wordSearch(input){
 
 function setDisplayMode(){
     if(isLightMode){
-        // document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";
-        // document.getElementsByTagName("body")[0].style.backgroundColor = "#F2F2F7";
-        // Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-        //     element.style.color = "black"
-        // });
-        // document.getElementById("ver").style.color = "black";
-        // let of = document.getElementById("outputField");
-        // of.style.backgroundColor = "white";
-        // of.style.color = "black";
-        // document.getElementsByTagName("small")[0].style.color = "black";
+        document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";
+        document.getElementsByTagName("body")[0].style.backgroundColor = "#F2F2F7";
+        document.getElementById("titleBar").style.backgroundColor = "white";
+        document.getElementById("title").style.color = "black";
+        document.getElementsByClassName("menu")[0].style.backgroundColor = "#e5e5fb"
+        Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            // element.style.color = "black"
+        });
+        document.getElementById("ver").style.color = "black";
+        let of = document.getElementById("outputField");
+        of.style.backgroundColor = "white";
+        of.style.color = "black";
+        document.getElementsByTagName("small")[0].style.color = "black";
         displayModeSwitch.innerHTML = "🌚ダーク";
     }else{
         document.getElementsByTagName("html")[0].style.backgroundColor = "black";
         document.getElementsByTagName("body")[0].style.backgroundColor = "black";
+        document.getElementById("titleBar").style.backgroundColor = "#1C1C1E";
+        document.getElementById("title").style.color = "white";
+        document.getElementsByClassName("menu")[0].style.backgroundColor = "#"
         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-            element.style.color = "white"
+            // element.style.color = "white"
         });
         document.getElementById("ver").style.color = "white";
         let of = document.getElementById("outputField");
