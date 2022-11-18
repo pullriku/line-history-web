@@ -99,7 +99,7 @@ nav ul li a{
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: rgb(229, 229, 251);
+    background-color: rgba(158, 195, 255, 0.791);
     border-radius: 20px;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -115,4 +115,8 @@ small{
 
 p{
     color: black;
+}
+
+code{
+    background-color: rgb(62, 67, 116);
 }
