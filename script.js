@@ -1,5 +1,5 @@
 var historyData;
-var DATE_PATTERN = /^20\d{2}\/\d{2}\/\d{2}\(.+\)\r?$/g;
+var DATE_PATTERN = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 var YEAR_PATTERN = /^20\d{2}/g;
 var MONTH_DAY_PATTERN = /\d{2}/g;
 function runCommand(command_) {
@@ -9,7 +9,8 @@ function runCommand(command_) {
     }
     var commandName = command[0];
     var output = "";
-    if (/^20\d{2}\/\d{2}\/\d{2}$/.test(commandName)) {
+    console.log(command);
+    if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)) {
         output = searchByDate(commandName);
     }
     else if (commandName == "/help") {
@@ -102,8 +103,8 @@ function searchByKeyword(keyword) {
                         spaceRemoveCounter++;
                     if (date.getDate() <= 9)
                         spaceRemoveCounter++;
-                    var outputElement = "".concat(date.toLocaleString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/"));
-                    output += "<a href=\"javascript:runcommand(/search ".concat(outputElement, ");\"><spam style=\"font-weight: bold;\">") + outputElement + "</spam></a> ".concat(line, "<br>");
+                    var outputElement = "".concat(date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/"));
+                    output += "<a href=\"javascript:runSearchByDate('".concat(outputElement, "');\"><spam style=\"font-weight: bold;\">") + outputElement + "</spam></a> ".concat(line, "<br>");
                 }
             }
         }
@@ -119,6 +120,14 @@ function makeErrorMessage(message) {
         result += "type: ".concat(message);
     }
     return result;
+}
+function runSearchByDate(date) {
+    console.log(date);
+    var outputField = document.getElementById("outputField");
+    var result = runCommand(date);
+    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
+        outputField.innerHTML = result;
+    }
 }
 function main() {
     var fileField = document.getElementById("file");
@@ -141,8 +150,6 @@ function main() {
         var result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"));
         if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
             outputField.innerHTML = result;
-        }
-        else {
         }
     });
     wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", function (e) {

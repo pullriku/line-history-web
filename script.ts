@@ -1,5 +1,5 @@
 let historyData: string[];
-const DATE_PATTERN: RegExp = /^20\d{2}\/\d{2}\/\d{2}\(.+\)\r?$/g;
+const DATE_PATTERN: RegExp = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 const YEAR_PATTERN: RegExp = /^20\d{2}/g;
 const MONTH_DAY_PATTERN: RegExp = /\d{2}/g;
 
@@ -12,7 +12,8 @@ function runCommand(command_: string): string{
     let commandName: string = command[0];
     let output: string = ""
 
-    if (/^20\d{2}\/\d{2}\/\d{2}$/.test(commandName)){
+    console.log(command);
+    if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)){
         output = searchByDate(commandName)
     }else if(commandName == "/help"){
 
@@ -108,8 +109,8 @@ function searchByKeyword(keyword: string): string{
                     if(date.getMonth() <= 8)spaceRemoveCounter++;
                     if(date.getDate() <= 9)spaceRemoveCounter++;
                     
-                    let outputElement = `${date.toLocaleString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
-                    output += `<a href="javascript:runcommand(/search ${outputElement});"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
+                    let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
+                    output += `<a href="javascript:runSearchByDate('${outputElement}');"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
                 }
             }
         }
@@ -127,6 +128,16 @@ function makeErrorMessage(message: string): string{
     }
     return result;
 }
+
+function runSearchByDate(date: string): void{
+    console.log(date);
+    const outputField = document.getElementById("outputField");
+    let result = runCommand(date);
+        if(outputField?.innerHTML && result != ""){
+            outputField.innerHTML = result;
+        }
+}
+
 
 function main(): void{
     const fileField = document.getElementById("file");
@@ -158,8 +169,6 @@ function main(): void{
         let result = runCommand((dateInput as HTMLInputElement)?.value.replace(/-/g, "/"));
         if(outputField?.innerHTML && result != ""){
             outputField.innerHTML = result;
-        }else{
-            
         }
     })
 
