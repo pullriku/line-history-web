@@ -138,6 +138,7 @@ function main(): void{
     const displayModeSwitch = document.getElementById("displayModeSwitch");
     const outputField = document.getElementById("outputField");
     let isLightMode = true;
+    setDisplayMode(isLightMode);
 
     if(outputField?.innerHTML){
         outputField.innerHTML = `
@@ -192,7 +193,37 @@ function main(): void{
     })
 
     function setDisplayMode(isLightMode: boolean): void{
-
+        if(isLightMode){
+            document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";
+            document.getElementsByTagName("body")[0].style.backgroundColor = "#F2F2F7";
+            document.getElementById("titleBar")!.style.backgroundColor = "white";
+            document.getElementById("title")!.style.color = "black";
+            (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "#e5e5fb"
+            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+                // element.style.color = "black"
+            });
+            document.getElementById("ver")!.style.color = "black";
+            let of = document.getElementById("outputField");
+            of.style.backgroundColor = "white";
+            of.style.color = "black";
+            document.getElementsByTagName("small")[0].style.color = "black";
+            displayModeSwitch!.innerHTML = "🌚ダーク";
+        }else{
+            document.getElementsByTagName("html")[0].style.backgroundColor = "black";
+            document.getElementsByTagName("body")[0].style.backgroundColor = "black";
+            document.getElementById("titleBar")!.style.backgroundColor = "#1C1C1E";
+            document.getElementById("title")!.style.color = "white";
+            (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "#"
+            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+                // element.style.color = "white"
+            });
+            document.getElementById("ver")!.style.color = "white";
+            let of = document.getElementById("outputField");
+            of.style.backgroundColor = "#1C1C1E";
+            of.style.color = "white"
+            document.getElementsByTagName("small")[0].style.color = "white";
+            displayModeSwitch!.innerHTML = "🌝ライト";
+        }
     }
 }
-main()
+main();
