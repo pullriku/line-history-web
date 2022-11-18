@@ -3,4 +3,4 @@ git*
 node_modules
 .*
 package*
-*.js
+test*
