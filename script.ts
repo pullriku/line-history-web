@@ -158,8 +158,15 @@ function main(): void{
     const wordSubmitButton = document.getElementById("wordSubmitButton");
     const displayModeSwitch = document.getElementById("displayModeSwitch");
     const outputField = document.getElementById("outputField");
-    let isLightMode = true;
+    
+    const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    let isLightMode = ! darkModeMediaQuery.matches;
     setDisplayMode(isLightMode);
+
+    darkModeMediaQuery.addEventListener("change", (e)=>{
+        isLightMode = ! e.matches;
+        setDisplayMode(isLightMode);
+    })
 
     if(outputField?.innerHTML){
         outputField.innerHTML = `
@@ -212,27 +219,38 @@ function main(): void{
     })
 
     function setDisplayMode(isLightMode: boolean): void{
-        const head = document.getElementsByTagName("head")[0];
-        let cssSelector = document.querySelector("#cssSelector");
-        if(head && cssSelector){
-            head.removeChild(cssSelector);
-        }
-
-        let child = document.createElement("link");
-        child.id = "cssSelector";
-        child.rel = "stylesheet";
-
-        if(displayModeSwitch){
+        if(displayModeSwitch != null) {
             if(isLightMode){
-                child.href = "./light.css";
+                document.documentElement.setAttribute("theme", "light");
                 displayModeSwitch.innerHTML = "🌚ダーク";
             }else{
-                child.href = "./dark.css";
+                document.documentElement.setAttribute("theme", "dark");
                 displayModeSwitch.innerHTML = "🌝ライト";
             }
-            head.appendChild(child);
         }
     }
+    // function setDisplayMode(isLightMode: boolean): void{
+    //     const head = document.getElementsByTagName("head")[0];
+    //     let cssSelector = document.querySelector("#cssSelector");
+    //     if(head && cssSelector){
+    //         head.removeChild(cssSelector);
+    //     }
+
+    //     let child = document.createElement("link");
+    //     child.id = "cssSelector";
+    //     child.rel = "stylesheet";
+
+    //     if(displayModeSwitch){
+    //         if(isLightMode){
+    //             child.href = "./light.css";
+    //             displayModeSwitch.innerHTML = "🌚ダーク";
+    //         }else{
+    //             child.href = "./dark.css";
+    //             displayModeSwitch.innerHTML = "🌝ライト";
+    //         }
+    //         head.appendChild(child);
+    //     }
+    // }
     // function setDisplayMode(isLightMode: boolean): void{
     //     if(isLightMode){
     //         document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";

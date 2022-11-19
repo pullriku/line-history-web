@@ -4,14 +4,23 @@
     --menu-color: rgba(158, 195, 255, 0.791);
     --text-color: black;
 }
-@media (prefers-color-scheme: dark){
+
+:root[theme="dark"]{
+    --background-color: black;
+    --background-sub-color: #1c1c1e;
+    --menu-color: rgb(62, 67, 116);
+    --text-color: white;
+}
+
+
+/* @media (prefers-color-scheme: dark){
     :root{
         --background-color: black;
         --background-sub-color: #1c1c1e;
         --menu-color: rgb(62, 67, 116);
         --text-color: white;
     }
-}
+} */
 
 html{
     background-color: var(--background-color); /**/
@@ -44,6 +53,8 @@ main{
     color: var(--text-color);
     border-radius: 20px;
     margin-bottom: 20px;
+
+    transition: .5s;
 }
 
 #titleBar{
@@ -55,6 +66,8 @@ main{
     border-bottom: 0.5px solid gray;
     display: flex;
     box-sizing: border-box;
+
+    transition: .5s;
 }
 
 #titleBar ul{
@@ -78,6 +91,8 @@ main{
 
 #title {
     color: var(--text-color); /**/
+
+    transition: .5s;
 }
 
 /* #titleBarContents{
@@ -143,6 +158,8 @@ nav ul li a,button{
     border-radius: 20px;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+    transition: .5s;
 }
 
 hr{
@@ -152,8 +169,12 @@ hr{
 small{
     padding: 0;
     color: var(--text-color);/**/
+
+    transition: .5s;
 }
 
 p{
     color: var(--text-color); /**/
+
+    transition: .5s;
 }
