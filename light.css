@@ -6,6 +6,10 @@ body{
     margin: 0;
 }
 
+h1, h2, h3, h4{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 main{
     padding-top: 2%;
     padding-left: 2%;
