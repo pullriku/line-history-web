@@ -155,7 +155,7 @@ function main() {
         setDisplayMode(isLightMode);
     });
     if (outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) {
-        outputField.innerHTML = "\n        <br>\n        <br>\n        Welcome back\n        <br>\n        <br>\n        ";
+        outputField.innerHTML = "\n        <br>\n        Welcome back\n        <br>\n        <br>\n        ";
     }
     wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", function (e) {
         inputWord = e.target.value;

@@ -171,7 +171,6 @@ function main(): void{
     if(outputField?.innerHTML){
         outputField.innerHTML = `
         <br>
-        <br>
         Welcome back
         <br>
         <br>

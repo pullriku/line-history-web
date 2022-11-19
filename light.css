@@ -59,6 +59,7 @@ main{
     margin-bottom: 20px;
     border-top: var(--output-border);
     border-bottom: var(--output-border);
+    
     transition: .5s;
 }
 
