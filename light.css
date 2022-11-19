@@ -1,5 +1,21 @@
+:root{
+    --background-color: #f2f2f7;
+    --background-sub-color: white;
+    --menu-color: rgba(158, 195, 255, 0.791);
+    --text-color: black;
+}
+@media (prefers-color-scheme: dark){
+    :root{
+        --background-color: black;
+        --background-sub-color: #1c1c1e;
+        --menu-color: rgb(62, 67, 116);
+        --text-color: white;
+    }
+}
+
 html{
-    background-color: #f2f2f7; /**/
+    background-color: var(--background-color); /**/
+    transition: .5s;
 }
 
 body{
@@ -24,8 +40,8 @@ main{
     padding-right: 2;
     font-family: monospace;
     font-size:medium;
-    background-color: white;/**/
-    color: black;
+    background-color: var(--background-sub-color);/**/
+    color: var(--text-color);
     border-radius: 20px;
     margin-bottom: 20px;
 }
@@ -35,7 +51,7 @@ main{
     padding-left: 0;
     height:fit-content;
     font-family: sans-serif;
-    background-color: white;/**/
+    background-color: var(--background-sub-color);/**/
     border-bottom: 0.5px solid gray;
     display: flex;
     box-sizing: border-box;
@@ -61,7 +77,7 @@ main{
 }
 
 #title {
-    color: black; /**/
+    color: var(--text-color); /**/
 }
 
 /* #titleBarContents{
@@ -109,7 +125,7 @@ nav ul li a,button{
 }
 
 #ver{
-    color: black;/**/
+    color: var(--text-color);/**/
     float: right;
     width: fit-content;
     height: min-content;
@@ -123,7 +139,7 @@ nav ul li a,button{
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: rgba(158, 195, 255, 0.791);/**/
+    background-color: var(--menu-color);/**/
     border-radius: 20px;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -135,9 +151,9 @@ hr{
 
 small{
     padding: 0;
-    color: black;/**/
+    color: var(--text-color);/**/
 }
 
 p{
-    color: black; /**/
+    color: var(--text-color); /**/
 }
