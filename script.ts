@@ -129,12 +129,22 @@ function makeErrorMessage(message: string): string{
     return result;
 }
 
+function addAsterisk(message: string): string{
+    let result = "";
+    let inputSplited = message.split("<br>");
+    for(let i = 0; i < inputSplited.length; i++){
+        let line = inputSplited[i];
+        result += `*${line}<br>`;
+    }
+    return result;
+}
+
 function runSearchByDate(date: string): void{
     console.log(date);
     const outputField = document.getElementById("outputField");
     let result = runCommand(date);
         if(outputField?.innerHTML && result != ""){
-            outputField.innerHTML = result;
+            outputField.innerHTML = addAsterisk(result);
         }
 }
 
@@ -168,14 +178,14 @@ function main(): void{
     dateSubmitButton?.addEventListener("click", (e) => {
         let result = runCommand((dateInput as HTMLInputElement)?.value.replace(/-/g, "/"));
         if(outputField?.innerHTML && result != ""){
-            outputField.innerHTML = result;
+            outputField.innerHTML = addAsterisk(result);
         }
     })
 
     wordSubmitButton?.addEventListener("click", (e)=>{
         let result = runCommand(`/search ${inputWord}`);
         if(outputField?.innerHTML && result != ""){
-            outputField.innerHTML = result;
+            outputField.innerHTML = addAsterisk(result);
         }
     })
 
@@ -208,8 +218,8 @@ function main(): void{
             document.getElementById("titleBar")!.style.backgroundColor = "white";
             document.getElementById("title")!.style.color = "black";
             (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "rgba(158, 195, 255, 0.791)"
-            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
-                // element.style.color = "black"
+            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element: { style: { color: string; }; })=>{
+                element.style.color = "black"
             });
             document.getElementById("ver")!.style.color = "black";
             let of = document.getElementById("outputField");
@@ -223,7 +233,7 @@ function main(): void{
             document.getElementById("titleBar")!.style.backgroundColor = "#1C1C1E";
             document.getElementById("title")!.style.color = "white";
             (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "rgb(62, 67, 116)"
-            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element)=>{
+            Array.prototype.forEach.call(document.getElementsByTagName("p"), (element: { style: { color: string; }; })=>{
                 element.style.color = "white"
             });
             document.getElementById("ver")!.style.color = "white";

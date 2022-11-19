@@ -15,6 +15,7 @@ main{
     padding-left: 2%;
     padding-right: 2;
     font-family: 'Courier New', Courier, monospace;
+    font-size:smaller;
     background-color: white;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -92,7 +93,7 @@ nav ul li a{
     /* margin-top: auto;
     margin-bottom: auto; */
     margin: auto 0 auto auto; /*上右下左*/
-    font-size: 0.1rem
+    font-size: 0.8rem
 }
 
 .menu{
@@ -115,8 +116,4 @@ small{
 
 p{
     color: black;
-}
-
-code{
-    background-color: rgb(62, 67, 116);
 }

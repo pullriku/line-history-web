@@ -121,12 +121,21 @@ function makeErrorMessage(message) {
     }
     return result;
 }
+function addAsterisk(message) {
+    var result = "";
+    var inputSplited = message.split("<br>");
+    for (var i = 0; i < inputSplited.length; i++) {
+        var line = inputSplited[i];
+        result += "*".concat(line, "<br>");
+    }
+    return result;
+}
 function runSearchByDate(date) {
     console.log(date);
     var outputField = document.getElementById("outputField");
     var result = runCommand(date);
     if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-        outputField.innerHTML = result;
+        outputField.innerHTML = addAsterisk(result);
     }
 }
 function main() {
@@ -149,13 +158,13 @@ function main() {
     dateSubmitButton === null || dateSubmitButton === void 0 ? void 0 : dateSubmitButton.addEventListener("click", function (e) {
         var result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"));
         if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-            outputField.innerHTML = result;
+            outputField.innerHTML = addAsterisk(result);
         }
     });
     wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", function (e) {
         var result = runCommand("/search ".concat(inputWord));
         if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-            outputField.innerHTML = result;
+            outputField.innerHTML = addAsterisk(result);
         }
     });
     var file;
@@ -185,7 +194,7 @@ function main() {
             document.getElementById("title").style.color = "black";
             document.getElementsByClassName("menu")[0].style.backgroundColor = "rgba(158, 195, 255, 0.791)";
             Array.prototype.forEach.call(document.getElementsByTagName("p"), function (element) {
-                // element.style.color = "black"
+                element.style.color = "black";
             });
             document.getElementById("ver").style.color = "black";
             var of = document.getElementById("outputField");
