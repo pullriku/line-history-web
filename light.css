@@ -1,15 +1,19 @@
 :root{
     --background-color: #f2f2f7;
     --background-sub-color: white;
+    --nav-color: aqua;
     --menu-color: rgba(158, 195, 255, 0.791);
     --text-color: black;
+    --output-border: border-top: 0px;
 }
 
 :root[theme="dark"]{
     --background-color: black;
-    --background-sub-color: #1c1c1e;
+    --background-sub-color: rgb();
+    --nav-color: rgb(62, 67, 116);
     --menu-color: rgb(62, 67, 116);
     --text-color: white;
+    --output-border: 1px solid rgb(101, 101, 101);
 }
 
 
@@ -53,7 +57,8 @@ main{
     color: var(--text-color);
     border-radius: 20px;
     margin-bottom: 20px;
-
+    border-top: var(--output-border);
+    border-bottom: var(--output-border);
     transition: .5s;
 }
 
@@ -125,16 +130,16 @@ nav ul{
 
 nav ul li{
     padding: 2px 10px;
-    background-color: aqua;
+    background-color: var(--nav-color);
     margin-right: 5px;
     border-radius: 5px;
     border-bottom: 1px solid black;
     font-size: small;
 }
 
-nav ul li a,button{
+nav ul li a, nav ul li button{
     text-decoration: none;
-    color: black;
+    color: var(--text-color);
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
