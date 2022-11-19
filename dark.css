@@ -22,8 +22,8 @@ main{
     padding-bottom: 20px;
     padding-left: 2%;
     padding-right: 2;
-    font-family: 'Courier New', Courier, monospace;
-    font-size:smaller;
+    font-family: monospace;
+    font-size:medium;
     background-color: #1c1c1e;/**/
     color: white;/**/
     border-radius: 20px;
