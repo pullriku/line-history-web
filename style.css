@@ -1,19 +1,21 @@
 :root{
     --background-color: #f2f2f7;
     --background-sub-color: white;
-    --nav-color: rgb(231, 217, 251);
-    --menu-color: rgba(158, 195, 255, 0.791);
+    --nav-color: white;
+    --menu-color: #f6f5eb;
     --text-color: black;
     --output-border: border-top: 0px;
+    --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), var(--background-color));
 }
 
 :root[theme="dark"]{
     --background-color: black;
-    --background-sub-color: rgb();
+    --background-sub-color: black;
     --nav-color: rgb(62, 67, 116);
-    --menu-color: rgb(62, 67, 116);
+    --menu-color: rgb(47, 52, 90);
     --text-color: white;
     --output-border: 1px solid rgb(101, 101, 101);
+    --background-gradient: linear-gradient(to bottom, black, black);
 }
 
 
@@ -27,14 +29,16 @@
 } */
 
 html{
-    background-color: var(--background-color); /**/
+    background: var(--background-gradient);
+    /* background-color: var(--background-color); */
     transition: .5s;
 }
 
 body{
-    background-color: var(--background-color);
+    /* background-color: var(--background-color); */
     margin: 0;
     transition: .5s;
+    min-height: 100vh;
 }
 
 h1, h2, h3, h4{
@@ -47,9 +51,14 @@ main{
     padding-top: 2%;
     padding-left: 2%;
     padding-right: 2%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
 }
 
 #outputField {
+    backdrop-filter: blur(1px);
     overflow-wrap: break-word;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -57,7 +66,7 @@ main{
     padding-right: 2;
     font-family: monospace;
     font-size:medium;
-    background-color: var(--background-sub-color);/**/
+    background-color: var(--background-sub-color);
     color: var(--text-color);
     border-radius: 20px;
     margin-bottom: 20px;
@@ -72,7 +81,7 @@ main{
     padding-left: 0;
     height:fit-content;
     font-family: sans-serif;
-    background-color: var(--background-sub-color);/**/
+    background-color: var(--background-sub-color);
     border-bottom: 0.5px solid gray;
     display: flex;
     box-sizing: border-box;
@@ -166,7 +175,7 @@ nav ul li a, nav ul li button{
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: var(--menu-color);/**/
+    background-color: var(--menu-color);
     border-radius: 20px;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -175,7 +184,8 @@ nav ul li a, nav ul li button{
 }
 
 hr{
-    border-top: 3px solid #8c8b8b;
+    /* border-top: 3px solid #8c8b8b; */
+    border-top: 1px dashed #8c8b8b;
 }
 
 small{
