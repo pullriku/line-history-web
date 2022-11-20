@@ -31,6 +31,8 @@
 html{
     background: var(--background-gradient);
     /* background-color: var(--background-color); */
+    min-height: 100vh;
+    
     transition: .5s;
 }
 
@@ -38,7 +40,6 @@ body{
     /* background-color: var(--background-color); */
     margin: 0;
     transition: .5s;
-    min-height: 100vh;
 }
 
 h1, h2, h3, h4{
