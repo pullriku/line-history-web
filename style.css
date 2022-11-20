@@ -1,7 +1,7 @@
 :root{
     --background-color: #f2f2f7;
     --background-sub-color: white;
-    --nav-color: aqua;
+    --nav-color: rgb(231, 217, 251);
     --menu-color: rgba(158, 195, 255, 0.791);
     --text-color: black;
     --output-border: border-top: 0px;
@@ -131,9 +131,11 @@ nav ul{
     display: flex;
     list-style: none;
     padding-left: 0;
+    text-align: center;
 }
 
 nav ul li{
+    min-width: 40px;
     padding: 2px 10px;
     background-color: var(--nav-color);
     margin-right: 5px;

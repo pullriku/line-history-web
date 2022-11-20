@@ -171,8 +171,7 @@ function main(): void{
     if(outputField?.innerHTML){
         outputField.innerHTML = `
         <br>
-        Welcome back
-        <br>
+        Welcome back<br>
         <br>
         `
     }
@@ -221,68 +220,13 @@ function main(): void{
         if(displayModeSwitch != null) {
             if(isLightMode){
                 document.documentElement.setAttribute("theme", "light");
-                displayModeSwitch.innerHTML = "🌚ダーク";
+                displayModeSwitch.innerHTML = "🌚<br>ダーク";
             }else{
                 document.documentElement.setAttribute("theme", "dark");
-                displayModeSwitch.innerHTML = "🌝ライト";
+                displayModeSwitch.innerHTML = "🌝<br>ライト";
             }
         }
     }
-    // function setDisplayMode(isLightMode: boolean): void{
-    //     const head = document.getElementsByTagName("head")[0];
-    //     let cssSelector = document.querySelector("#cssSelector");
-    //     if(head && cssSelector){
-    //         head.removeChild(cssSelector);
-    //     }
-
-    //     let child = document.createElement("link");
-    //     child.id = "cssSelector";
-    //     child.rel = "stylesheet";
-
-    //     if(displayModeSwitch){
-    //         if(isLightMode){
-    //             child.href = "./light.css";
-    //             displayModeSwitch.innerHTML = "🌚ダーク";
-    //         }else{
-    //             child.href = "./dark.css";
-    //             displayModeSwitch.innerHTML = "🌝ライト";
-    //         }
-    //         head.appendChild(child);
-    //     }
-    // }
-    // function setDisplayMode(isLightMode: boolean): void{
-    //     if(isLightMode){
-    //         document.getElementsByTagName("html")[0].style.backgroundColor = "#F2F2F7";
-    //         document.getElementsByTagName("body")[0].style.backgroundColor = "#F2F2F7";
-    //         document.getElementById("titleBar")!.style.backgroundColor = "white";
-    //         document.getElementById("title")!.style.color = "black";
-    //         (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "rgba(158, 195, 255, 0.791)"
-    //         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element: { style: { color: string; }; })=>{
-    //             element.style.color = "black"
-    //         });
-    //         document.getElementById("ver")!.style.color = "black";
-    //         let of = document.getElementById("outputField");
-    //         of!.style.backgroundColor = "white";
-    //         of!.style.color = "black";
-    //         document.getElementsByTagName("small")[0].style.color = "black";
-    //         displayModeSwitch!.innerHTML = "🌚ダーク";
-    //     }else{
-    //         document.getElementsByTagName("html")[0].style.backgroundColor = "black";
-    //         document.getElementsByTagName("body")[0].style.backgroundColor = "black";
-    //         document.getElementById("titleBar")!.style.backgroundColor = "#1C1C1E";
-    //         document.getElementById("title")!.style.color = "white";
-    //         (document.getElementsByClassName("menu")[0] as HTMLElement).style.backgroundColor = "rgb(62, 67, 116)"
-    //         Array.prototype.forEach.call(document.getElementsByTagName("p"), (element: { style: { color: string; }; })=>{
-    //             element.style.color = "white"
-    //         });
-    //         document.getElementById("ver")!.style.color = "white";
-    //         let of = document.getElementById("outputField");
-    //         of!.style.backgroundColor = "#1C1C1E";
-    //         of!.style.color = "white"
-    //         document.getElementsByTagName("small")[0].style.color = "white";
-    //         displayModeSwitch!.innerHTML = "🌝ライト";
-    //     }
-    // }
 }
 
 main();
