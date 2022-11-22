@@ -160,6 +160,7 @@ nav ul li{
 }
 
 nav ul li a, nav ul li button{
+    font-size: 1em;
     text-decoration: none;
     color: var(--text-color);
     font-weight: bold;
