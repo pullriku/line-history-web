@@ -163,14 +163,16 @@ function main() {
     }
     // 特別な表示の処理
     // 毎年2/10から2/16に表示
-    var year = new Date().getFullYear();
-    var month = new Date().getMonth() + 1;
-    var day = new Date().getDay();
+    var today = new Date(2046, 2 - 1, 13);
+    // const today  = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();
     var yearDiff = year - 2022;
     var ordinal; // 序数詞
-    console.log(year, month, day);
     if (month == 2 && 10 <= day && day <= 16) {
-        switch (yearDiff) {
+        var onesPlace = yearDiff % 10;
+        switch (onesPlace) {
             case 1:
                 ordinal = "st";
                 break;
@@ -184,8 +186,8 @@ function main() {
                 ordinal = "th";
                 break;
         }
-        if (title === null || title === void 0 ? void 0 : title.innerHTML) {
-            title.innerHTML = title.innerHTML + "<br><spam id=\"specialMessage\">".concat(yearDiff).concat(ordinal, " Anniv!</spam>");
+        if (title) {
+            title.innerHTML += "<br><spam id=\"specialMessage\">\uD83C\uDF89".concat(yearDiff).concat(ordinal, " Anniv!</spam>");
         }
     }
     wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", function (e) {

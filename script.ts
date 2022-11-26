@@ -183,14 +183,16 @@ function main(): void{
 
     // 特別な表示の処理
     // 毎年2/10から2/16に表示
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth() + 1;
-    const day = new Date().getDay();
+    // const today = new Date(2046,2-1,13);
+    const today  = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
     const yearDiff = year - 2022;
     let ordinal: string; // 序数詞
-    console.log(year, month, day);
     if(month == 2 && 10 <= day && day <= 16){
-        switch(yearDiff){
+        const onesPlace = yearDiff % 10;
+        switch(onesPlace){
             case 1:
                 ordinal = "st";
                 break;
@@ -204,8 +206,8 @@ function main(): void{
                 ordinal = "th";
                 break;
         }
-        if(title?.innerHTML){
-            title.innerHTML = title.innerHTML + `<br><spam id="specialMessage">${yearDiff}${ordinal} Anniv!</spam>`
+        if(title){
+            title.innerHTML += `<br><spam id="specialMessage">🎉${yearDiff}${ordinal} Anniv!</spam>`;
         }
     }
 
