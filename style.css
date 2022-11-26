@@ -7,6 +7,7 @@
     --text-color: black;
     --output-border: border-top: 0px;
     --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), var(--background-color));
+    /* --settings-color: lightgray */
 }
 
 :root[theme="dark"]{
@@ -17,6 +18,7 @@
     --text-color: white;
     --output-border: 1px solid rgb(101, 101, 101);
     --background-gradient: transparent;
+    /* --settings-color: #1C1C1E */
 }
 
 
@@ -210,4 +212,9 @@ p{
     color: var(--text-color); /**/
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     transition: .5s;
+}
+
+.settings{
+    border-radius: 20px;
+    margin-bottom: 20px;
 }
