@@ -142,6 +142,7 @@ function runSearchByDate(date) {
     }
 }
 function main() {
+    var title = document.getElementById("title");
     var fileField = document.getElementById("file");
     var dateInput = document.getElementById("dateTimeInput");
     var dateSubmitButton = document.getElementById("dateSubmitButton");
@@ -159,6 +160,33 @@ function main() {
     });
     if (outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) {
         outputField.innerHTML = "\n        <br>\n        Welcome back<br>\n        <br>\n        ";
+    }
+    // 特別な表示の処理
+    // 毎年2/10から2/16に表示
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth() + 1;
+    var day = new Date().getDay();
+    var yearDiff = year - 2022;
+    var ordinal; // 序数詞
+    console.log(year, month, day);
+    if (month == 2 && 10 <= day && day <= 16) {
+        switch (yearDiff) {
+            case 1:
+                ordinal = "st";
+                break;
+            case 2:
+                ordinal = "nd";
+                break;
+            case 3:
+                ordinal = "rd";
+                break;
+            default:
+                ordinal = "th";
+                break;
+        }
+        if (title === null || title === void 0 ? void 0 : title.innerHTML) {
+            title.innerHTML = title.innerHTML + "<br><spam id=\"specialMessage\">".concat(yearDiff).concat(ordinal, " Anniv!</spam>");
+        }
     }
     wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", function (e) {
         inputWord = e.target.value;

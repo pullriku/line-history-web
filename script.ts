@@ -154,6 +154,7 @@ function runSearchByDate(date: string): void{
 
 
 function main(): void{
+    const title = document.getElementById("title");
     const fileField = document.getElementById("file");
     const dateInput = document.getElementById("dateTimeInput");
     const dateSubmitButton = document.getElementById("dateSubmitButton");
@@ -178,6 +179,34 @@ function main(): void{
         Welcome back<br>
         <br>
         `
+    }
+
+    // 特別な表示の処理
+    // 毎年2/10から2/16に表示
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth() + 1;
+    const day = new Date().getDay();
+    const yearDiff = year - 2022;
+    let ordinal: string; // 序数詞
+    console.log(year, month, day);
+    if(month == 2 && 10 <= day && day <= 16){
+        switch(yearDiff){
+            case 1:
+                ordinal = "st";
+                break;
+            case 2:
+                ordinal = "nd";
+                break;
+            case 3:
+                ordinal = "rd";
+                break;
+            default:
+                ordinal = "th";
+                break;
+        }
+        if(title?.innerHTML){
+            title.innerHTML = title.innerHTML + `<br><spam id="specialMessage">${yearDiff}${ordinal} Anniv!</spam>`
+        }
     }
 
     wordInputField?.addEventListener("keyup", (e)=>{

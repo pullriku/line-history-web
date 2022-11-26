@@ -213,3 +213,9 @@ p{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     transition: .5s;
 }
+
+#specialMessage{
+    background-color: red;
+    color: white;
+    padding: 5px;
+}
