@@ -163,8 +163,8 @@ function main() {
     }
     // 特別な表示の処理
     // 毎年2/10から2/16に表示
-    var today = new Date(2046, 2 - 1, 13);
-    // const today  = new Date();
+    // const today = new Date(2046,2-1,13);
+    var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
