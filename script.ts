@@ -1,4 +1,4 @@
-let historyData: string[];
+let historyData: string[] = [];
 const DATE_PATTERN: RegExp = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 const YEAR_PATTERN: RegExp = /^20\d{2}/g;
 const MONTH_DAY_PATTERN: RegExp = /\d{2}/g;
@@ -23,6 +23,10 @@ function runCommand(command_: string): string{
         output = searchByKeyword(command[1]);
     }else{
         output = makeErrorMessage("command_error");
+    }
+
+    if(historyData.length == 0){
+        output = "⚠️履歴ファイルを選択してください。"
     }
     return output;
 }

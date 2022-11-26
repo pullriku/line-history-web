@@ -1,4 +1,4 @@
-var historyData;
+var historyData = [];
 var DATE_PATTERN = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 var YEAR_PATTERN = /^20\d{2}/g;
 var MONTH_DAY_PATTERN = /\d{2}/g;
@@ -22,6 +22,9 @@ function runCommand(command_) {
     }
     else {
         output = makeErrorMessage("command_error");
+    }
+    if (historyData.length == 0) {
+        output = "⚠️履歴ファイルを選択してください。";
     }
     return output;
 }
