@@ -6,7 +6,7 @@
     --menu-color: #f6f5eb;
     --text-color: black;
     --output-border: border-top: 0px;
-    --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), var(--background-color));
+    --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), #f2f2f7);
     /* --settings-color: lightgray */
 }
 
@@ -63,7 +63,6 @@ main{
 }
 
 #outputField {
-    backdrop-filter: blur(1px);
     overflow-wrap: break-word;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -115,7 +114,6 @@ main{
 
 #title {
     color: var(--text-color); /**/
-
     transition: .5s;
 }
 
@@ -216,6 +214,7 @@ p{
 
 #specialMessage{
     background-color: red;
-    color: white;
     padding: 5px;
+    color: white;
+    display: none;
 }

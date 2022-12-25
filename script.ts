@@ -125,6 +125,31 @@ function searchByKeyword(keyword: string): string{
     return `${counter}件<br><br>${output}`;
 }
 
+function getRandom(n: number, m: number): number{
+    let num = Math.floor(Math.random() * (m + 1 - n)) + n;
+    return num;
+}
+
+function searchByRandom(): string{
+    const today = new Date().getTime();
+    let first = 0;
+
+    for(let i = 0; i < historyData.length; i++){
+        let line = historyData[i];
+        if(DATE_PATTERN.test(line)){
+            first = generateDate(line.substring(0, 10)).getTime();
+            break;
+        }
+    }
+    let result = "この日の履歴はありません";
+    while(result.indexOf("この日の履歴はありません") != -1){
+        let randomNum = getRandom(first, today);
+        let date = new Date(randomNum);
+        let result = searchByDate(`${date.getFullYear()}/${date.getMonth()+1}/${date.getDay()}`);
+    }
+    return result;
+}
+
 function makeErrorMessage(message: string): string{
     let result = "コマンドエラーが発生しました。";
     if(message != ""){
@@ -163,6 +188,7 @@ function main(): void{
     const wordSubmitButton = document.getElementById("wordSubmitButton");
     const displayModeSwitch = document.getElementById("displayModeSwitch");
     const outputField = document.getElementById("outputField");
+    const specialMessage = document.getElementById("specialMessage");
     
     const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     let isLightMode = ! darkModeMediaQuery.matches;
@@ -183,15 +209,15 @@ function main(): void{
 
     // 特別な表示の処理
     // 毎年2/10から2/16に表示
-    // const today = new Date(2046,1-1,1);
+    // const today = new Date(2023,2-1,13);
     const today  = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
     const day = today.getDate();
     const yearDiff = year - 2022;
-    
+
     let ordinal: string; // 序数詞
-    if(month == 2 && 10 <= day && day <= 16 && title){
+    if(month == 2 && 10 <= day && day <= 16 && specialMessage){
         const onesPlace = yearDiff % 10;
         switch(onesPlace){
             case 1:
@@ -207,11 +233,16 @@ function main(): void{
                 ordinal = "th";
                 break;
         }
-        title.innerHTML += `<br><spam id="specialMessage">🎉${yearDiff}${ordinal} Anniv!</spam>`;
+        // title.innerHTML += `<span id="specialMessage">🎉${yearDiff}${ordinal} Anniv!</span>`;
+        specialMessage.innerHTML = `🎉${yearDiff}${ordinal} Anniv!`;
+        specialMessage.style.display = "block"
+
     }
 
-    if(month == 1 && day == 1 && title){
-        title.innerHTML += `<br><spam id="specialMessage">HappyNewYear!</spam>`
+    if(month == 1 && day == 1 && specialMessage){
+        // title.innerHTML += `<span id="specialMessage">HappyNewYear!</span>`
+        specialMessage.innerHTML = `HappyNewYear!`;
+        specialMessage.style.display = "block"
     }
 
 

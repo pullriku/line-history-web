@@ -117,6 +117,28 @@ function searchByKeyword(keyword) {
     }
     return "".concat(counter, "\u4EF6<br><br>").concat(output);
 }
+function getRandom(n, m) {
+    var num = Math.floor(Math.random() * (m + 1 - n)) + n;
+    return num;
+}
+function searchByRandom() {
+    var today = new Date().getTime();
+    var first = 0;
+    for (var i = 0; i < historyData.length; i++) {
+        var line = historyData[i];
+        if (DATE_PATTERN.test(line)) {
+            first = generateDate(line.substring(0, 10)).getTime();
+            break;
+        }
+    }
+    var result = "この日の履歴はありません";
+    while (result.indexOf("この日の履歴はありません") != -1) {
+        var randomNum = getRandom(first, today);
+        var date = new Date(randomNum);
+        var result_1 = searchByDate("".concat(date.getFullYear(), "/").concat(date.getMonth() + 1, "/").concat(date.getDay()));
+    }
+    return result;
+}
 function makeErrorMessage(message) {
     var result = "コマンドエラーが発生しました。";
     if (message != "") {
@@ -151,6 +173,7 @@ function main() {
     var wordSubmitButton = document.getElementById("wordSubmitButton");
     var displayModeSwitch = document.getElementById("displayModeSwitch");
     var outputField = document.getElementById("outputField");
+    var specialMessage = document.getElementById("specialMessage");
     var darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     var isLightMode = !darkModeMediaQuery.matches;
     setDisplayMode(isLightMode);
@@ -163,14 +186,14 @@ function main() {
     }
     // 特別な表示の処理
     // 毎年2/10から2/16に表示
-    // const today = new Date(2046,1-1,1);
+    // const today = new Date(2023,2-1,13);
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
     var yearDiff = year - 2022;
     var ordinal; // 序数詞
-    if (month == 2 && 10 <= day && day <= 16 && title) {
+    if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
         var onesPlace = yearDiff % 10;
         switch (onesPlace) {
             case 1:
@@ -186,10 +209,14 @@ function main() {
                 ordinal = "th";
                 break;
         }
-        title.innerHTML += "<br><spam id=\"specialMessage\">\uD83C\uDF89".concat(yearDiff).concat(ordinal, " Anniv!</spam>");
+        // title.innerHTML += `<span id="specialMessage">🎉${yearDiff}${ordinal} Anniv!</span>`;
+        specialMessage.innerHTML = "\uD83C\uDF89".concat(yearDiff).concat(ordinal, " Anniv!");
+        specialMessage.style.display = "block";
     }
-    if (month == 1 && day == 1 && title) {
-        title.innerHTML += "<br><spam id=\"specialMessage\">HappyNewYear!</spam>";
+    if (month == 1 && day == 1 && specialMessage) {
+        // title.innerHTML += `<span id="specialMessage">HappyNewYear!</span>`
+        specialMessage.innerHTML = "HappyNewYear!";
+        specialMessage.style.display = "block";
     }
     wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", function (e) {
         inputWord = e.target.value;
