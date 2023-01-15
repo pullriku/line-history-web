@@ -1,7 +1,8 @@
-var darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-var isLightMode = !darkModeMediaQuery.matches;
+"use strict";
+const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+let isLightMode = !darkModeMediaQuery.matches;
 setDisplayMode(isLightMode);
-darkModeMediaQuery.addEventListener("change", function (e) {
+darkModeMediaQuery.addEventListener("change", (e) => {
     setDisplayMode(!darkModeMediaQuery.matches);
 });
 function setDisplayMode(isLightMode) {

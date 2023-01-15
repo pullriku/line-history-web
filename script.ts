@@ -114,7 +114,7 @@ function searchByKeyword(keyword: string): string{
                     if(date.getDate() <= 9)spaceRemoveCounter++;
                     
                     let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
-                    output += `<a href="javascript:runSearchByDate('${outputElement}');"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
+                    output += `<a href="javascript:runSearchByDate('${outputElement}');" id="dateLink"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
                 }
             }
         }
@@ -215,6 +215,7 @@ function main(): void{
     const month = today.getMonth() + 1;
     const day = today.getDate();
     const yearDiff = year - 2022;
+    
 
     let ordinal: string; // 序数詞
     if(month == 2 && 10 <= day && day <= 16 && specialMessage){
