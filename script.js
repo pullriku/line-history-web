@@ -148,7 +148,31 @@ function searchByRandom() {
     while (result.indexOf("この日の履歴はありません") != -1) {
         let randomNum = getRandom(first, today);
         let date = new Date(randomNum);
-        result = searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDay()}`);
+        result = searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+    }
+    return result;
+}
+function searchByRandom2() {
+    const today = new Date().getTime();
+    let first = 0;
+    for (let i = 0; i < historyData.length; i++) {
+        let line = historyData[i];
+        if (DATE_PATTERN.test(line)) {
+            // Assuming generateDate is a separate function that returns a Date object
+            first = generateDate(line.substring(0, 10)).getTime();
+            break;
+        }
+    }
+    let result = "この日の履歴はありません";
+    let foundData = false;
+    while (!foundData) {
+        let randomNum = getRandom(first, today);
+        let date = new Date(randomNum);
+        // Assuming searchByDate is a separate function that takes a date string and returns data
+        result = searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
+        if (result !== "この日の履歴はありません") {
+            foundData = true;
+        }
     }
     return result;
 }
