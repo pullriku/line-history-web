@@ -148,7 +148,7 @@ function searchByRandom() {
     while (result.indexOf("この日の履歴はありません") != -1) {
         let randomNum = getRandom(first, today);
         let date = new Date(randomNum);
-        let result = searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDay()}`);
+        result = searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDay()}`);
     }
     return result;
 }
