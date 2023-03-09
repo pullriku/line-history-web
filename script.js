@@ -5,8 +5,10 @@ const YEAR_PATTERN = /^20\d{2}/g;
 const MONTH_DAY_PATTERN = /\d{2}/g;
 function runCommand(command_) {
     let command = command_.split(" ");
-    for (let i = 0; i < 5 - command.length; i++) {
-        command.push("");
+    if (command.length < 5) {
+        for (let i = 0; i < 5 - command.length; i++) {
+            command.push("");
+        }
     }
     let commandName = command[0];
     let output = "";
@@ -33,15 +35,25 @@ function generateDate(dateString) {
     const splitDate = dateString.split("/");
     let result;
     if (splitDate.length != 3) {
-        result = new Date(2020, 1, 1);
+        result = new Date(1970, 1, 1);
     }
     else {
         const year = parseInt(splitDate[0]);
         const month = parseInt(splitDate[1]);
         const day = parseInt(splitDate[2]);
-        result = new Date(year, month - 1, day);
+        if (checkDate(year, month, day)) {
+            result = new Date(year, month - 1, day);
+        }
+        else {
+            result = new Date(1970, 1, 1);
+        }
     }
     return result;
+}
+function checkDate(year = 1970, month = 1, day = 1) {
+    return year > 0
+        && 0 < month && month < 13
+        && 0 < day && day < 32;
 }
 function searchByDate(dateString) {
     const dateInput = generateDate(dateString);
