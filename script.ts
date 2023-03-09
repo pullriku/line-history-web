@@ -151,14 +151,22 @@ function searchByRandom(): string{
             break;
         }
     }
+
     let result = "この日の履歴はありません";
-    while(result.indexOf("この日の履歴はありません") != -1){
+    let foundData = false;
+
+    while(!foundData){
         let randomNum = getRandom(first, today);
         let date = new Date(randomNum);
-        result = searchByDate(`${date.getFullYear()}/${date.getMonth()+1}/${date.getDay()}`);
+        // Assuming searchByDate is a separate function that takes a date string and returns data
+        result = searchByDate(`${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`);
+        if(result != "この日の履歴はありません") {
+            foundData = true;
+        }
     }
     return result;
 }
+
 
 function makeErrorMessage(message: string): string{
     let result = "コマンドエラーが発生しました。";
