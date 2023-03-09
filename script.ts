@@ -99,11 +99,11 @@ function searchByKeyword(keyword: string): string{
     let counter = 0;
     let output = "";
     let date: Date = new Date(1,1,1);
+    let max_date = new Date(1970,1,1);
 
     if(keyword.length > 1){
         for(let i = 0; i < historyData.length; i++){
             let line = historyData[i];
-            let max_date = new Date(1970,1,1);
             
             if(DATE_PATTERN.test(line)){
                 if(generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()){
