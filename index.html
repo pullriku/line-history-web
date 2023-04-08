@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <link rel="icon" href="./favicon.ico"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <meta name="robots" content="noindex" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,60 +11,65 @@
     <link id="cssSelector" rel="stylesheet" href="style.css">
     <title>History Viewer</title>
 </head>
+
 <body>
     <div id="titleBar">
         <ul>
             <li><img src="./icon.png" alt=""></li>
-            <li id="title">History Viewer<div id="specialMessage"></div></li>
+            <li id="title">History Viewer<div id="specialMessage"></div>
+            </li>
         </ul>
     </div>
     <main>
-    <nav>
-        <ul>
-            <!-- <li><a href="javascript:a();" id="displayModeSwitch"></a></li> -->
-            <li><button id="displayModeSwitch" class="unsetButton">Error</button></li>
-            <li><a href="./versions.html">ℹ️<br>情報</a></li>
-            <li><a href="https://github.com/TyomoGit/HistoryViewerJavaScriptEdition" target="_blank">🐱<br>Github</a></li>
-        </ul>
-    </nav>
-    <div class="menu">
+        <nav>
+            <ul>
+                <!-- <li><a href="javascript:a();" id="displayModeSwitch"></a></li> -->
+                <li><button id="displayModeSwitch" class="unsetButton">Error</button></li>
+                <li><a href="./versions.html">ℹ️<br>情報</a></li>
+                <li><a href="https://github.com/TyomoGit/HistoryViewerJavaScriptEdition"
+                        target="_blank">🐱<br>Github</a></li>
+            </ul>
+        </nav>
+        <div class="menu">
+            <p>
+                📝履歴ファイルを選択:
+                <input type="file" , id="file">
+            </p>
+        </div>
+        <div class="menu">
+            <p>
+                <label for="dateTimeInput">📅日付で検索: </label><br>
+                <input type="date" id="dateTimeInput">
+                <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
+                <button type="button" id="dateSubmitButton">確定</button>
+            </p>
+            <p>
+                <label for="dateTimeInput">💬メッセージを検索: </label><br>
+                <input type="text" id="wordInput">
+                <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
+                <button type="button" id="wordSubmitButton">確定</button>
+            </p>
+        </div>
+        <div id="outputField">
+            エラー。<br>
+            JavaScriptを有効にしてください。
+        </div>
         <p>
-            📝履歴ファイルを選択: 
-            <input type="file", id="file">
+            <button onclick="location.href='#'">🔼🔼</button>
         </p>
-    </div>
-    <div class="menu">
-        <p>
-            <label for="dateTimeInput">📅日付で検索: </label><br>
-            <input type="date" id="dateTimeInput">
-            <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
-            <button type="button" id="dateSubmitButton">確定</button>
-        </p>
-        <p>
-            <label for="dateTimeInput">💬メッセージを検索: </label><br>
-            <input type="text" id="wordInput">
-            <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
-            <button type="button" id="wordSubmitButton">確定</button>
-        </p>
-    </div>
-    <div id="outputField">
-        エラー。<br>
-        JavaScriptを有効にしてください。
-    </div>
-    <p>
-        <button onclick="location.href='#'">🔼🔼</button>
-    </p>
-    <!-- <div class="menu">
+        <!-- <div class="menu">
         <p>
             <label for="textField2">日付を入力: </label>
             <input type="text" id="inputText2" required minlength="5" size="20">
             <button type="button" id="submitButton2" disabled>確定</button>
         </p>
     </div> -->
-    <div id="ver">ver 1.7</div>
-    <small>&copy;2022 Tyomo</small>
+        <div id="ver">ver 1.7</div>
+        <small>&copy;2022 Tyomo</small>
     </main>
     <!-- <script src="emaki.js"></script> -->
     <script src="./script.js"></script>
+    <script src="./displaymodeController.js"></script>
 </body>
+
 </html>
