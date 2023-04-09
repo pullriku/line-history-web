@@ -37,7 +37,7 @@ class LineHistory {
                 if (dateTmp.getTime() == dateInput.getTime()) {
                     countStart = i;
                     countFlag = true;
-                    output += `${line}<br>`;
+                    output += `<h3 style="display:inline">${line}</h3><br>`;
                 } else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
                     break;
@@ -95,7 +95,7 @@ class LineHistory {
         if (output == "") {
             output = "見つかりませんでした。";
         }
-        return `${counter}件<br><br>${output}`;
+        return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
     searchByRandom(): string {
@@ -176,7 +176,6 @@ function runCommand(command_: string, history: LineHistory): string {
     let commandName: string = command[0];
     let output: string = ""
 
-    console.log(command);
     if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)) {
         output = history.searchByDate(commandName);
     } else if (commandName == "/help") {
