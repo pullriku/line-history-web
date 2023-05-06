@@ -149,7 +149,7 @@ nav ul{
     text-align: center;
 }
 
-nav ul li{
+nav ul li, .dateChangeButton{
     min-width: 40px;
     padding: 2px 10px;
     background-color: var(--nav-color);
@@ -161,7 +161,7 @@ nav ul li{
     transition: .5s;
 }
 
-nav ul li a, nav ul li button{
+nav ul li a, nav ul li button, .dateChangeButton{
     font-size: 1em;
     text-decoration: none;
     color: var(--text-color);
@@ -223,4 +223,23 @@ p{
 
 #dateLink {
     color: var(--link-color);
+}
+
+#changeButtonArea {
+    padding-top: 0.5rem;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#changeButtonArea ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding-left: 0%;
+}
+
+.dateChangeButton {
+    border: none;
+    padding: 0rem 1.5rem;
+    font-size: 1.4rem;
 }

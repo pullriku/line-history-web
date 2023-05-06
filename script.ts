@@ -8,9 +8,7 @@ class Patterns {
 
 class LineHistory {
     private historyData: string[];
-    public get isExist() {
-        return this.historyData != null && this.historyData != undefined && this.historyData.length != 0;
-    }
+    private _currentDate?: Date;
 
     constructor(data?: string) {
         if (data != null) {
@@ -18,9 +16,22 @@ class LineHistory {
         } else {
             this.historyData = [];
         }
+        this._currentDate = undefined;
     }
 
-    searchByDate(dateString: string): string {
+    public get currentDate(): Date | undefined {
+        return this._currentDate != undefined 
+            ? new Date(this._currentDate) 
+            : undefined;
+    }
+
+    public get isExist(): boolean {
+        return this.historyData != null 
+            && this.historyData != undefined 
+            && this.historyData.length != 0;
+    }
+
+    public searchByDate(dateString: string): string {
         let dateInput = this.generateDate(dateString);
         let countStart: number = -1;
         let countStop: number = -1;
@@ -38,6 +49,7 @@ class LineHistory {
                     countStart = i;
                     countFlag = true;
                     output += `<h3 style="display:inline;font-family: sans-serif;">${line}</h3><br>`;
+                    this._currentDate = dateTmp;
                 } else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
                     break;
@@ -58,7 +70,7 @@ class LineHistory {
         return output;
     }
 
-    searchByKeyword(keyword: string): string {
+    public searchByKeyword(keyword: string): string {
         let counter = 0;
         let output = "";
         let date: Date = new Date(1, 1, 1);
@@ -98,7 +110,7 @@ class LineHistory {
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
-    searchByRandom(tries: number = 1000): string {
+    public searchByRandom(tries: number = 1000): string {
         const today = new Date().getTime();
         let first = 0;
 
@@ -111,22 +123,18 @@ class LineHistory {
         }
 
         let result = "この日の履歴はありません";
-        let foundData = false;
+        let isFound = false;
 
-        while (!foundData) {
+        while (isFound == false && tries > 0) {
             let randomNum = this.getRandom(first, today);
             let date = new Date(randomNum);
             result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
             if (result.search("この日の履歴はありません") == -1) {
-                foundData = true;
-            } else {
-                tries--;
-                if (tries == 0) {
-                    result = "見つかりませんでした。";
-                    break;
-                }
+                isFound = true;
             }
+            tries--;
         }
+        if(tries == 0) result = "見つかりませんでした。";
         return result;
     }
 
@@ -227,6 +235,8 @@ const randomSubmitButton = document.getElementById("randomSubmitButton");
 const displayModeSwitch = document.getElementById("displayModeSwitch");
 const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
+const nextDateButton = document.getElementById("nextDateButton");
+const previousDateButton = document.getElementById("previousDateButton");
 
 let lineHistory = new LineHistory();
 
@@ -304,6 +314,26 @@ randomSubmitButton?.addEventListener("click", (e) => {
         outputField.innerHTML = addAsterisk(result);
     }
 })
+
+previousDateButton?.addEventListener("click", (e) => {
+    let current = lineHistory.currentDate
+    
+    if(outputField?.innerHTML && current != undefined){
+        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+        outputField.innerHTML = addAsterisk(result);
+    }
+});
+
+nextDateButton?.addEventListener("click", (e) => {
+    let current = lineHistory.currentDate
+
+    if(outputField?.innerHTML && current != undefined){
+        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+        outputField.innerHTML = addAsterisk(result);
+    }
+});
 
 let file: FileList;
 let text: string | ArrayBuffer;

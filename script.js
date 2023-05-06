@@ -13,9 +13,17 @@ class LineHistory {
         else {
             this.historyData = [];
         }
+        this._currentDate = undefined;
+    }
+    get currentDate() {
+        return this._currentDate != undefined
+            ? new Date(this._currentDate)
+            : undefined;
     }
     get isExist() {
-        return this.historyData != null && this.historyData != undefined && this.historyData.length != 0;
+        return this.historyData != null
+            && this.historyData != undefined
+            && this.historyData.length != 0;
     }
     searchByDate(dateString) {
         let dateInput = this.generateDate(dateString);
@@ -31,6 +39,7 @@ class LineHistory {
                     countStart = i;
                     countFlag = true;
                     output += `<h3 style="display:inline;font-family: sans-serif;">${line}</h3><br>`;
+                    this._currentDate = dateTmp;
                 }
                 else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
@@ -103,22 +112,18 @@ class LineHistory {
             }
         }
         let result = "この日の履歴はありません";
-        let foundData = false;
-        while (!foundData) {
+        let isFound = false;
+        while (isFound == false && tries > 0) {
             let randomNum = this.getRandom(first, today);
             let date = new Date(randomNum);
             result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
             if (result.search("この日の履歴はありません") == -1) {
-                foundData = true;
+                isFound = true;
             }
-            else {
-                tries--;
-                if (tries == 0) {
-                    result = "見つかりませんでした。";
-                    break;
-                }
-            }
+            tries--;
         }
+        if (tries == 0)
+            result = "見つかりませんでした。";
         return result;
     }
     getRandom(n, m) {
@@ -213,6 +218,8 @@ const randomSubmitButton = document.getElementById("randomSubmitButton");
 const displayModeSwitch = document.getElementById("displayModeSwitch");
 const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
+const nextDateButton = document.getElementById("nextDateButton");
+const previousDateButton = document.getElementById("previousDateButton");
 let lineHistory = new LineHistory();
 const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 let isLightMode = !mediaQuery.matches;
@@ -274,6 +281,22 @@ wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitBu
 randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
     let result = runCommand(`/random`, lineHistory);
     if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
+        outputField.innerHTML = addAsterisk(result);
+    }
+});
+previousDateButton === null || previousDateButton === void 0 ? void 0 : previousDateButton.addEventListener("click", (e) => {
+    let current = lineHistory.currentDate;
+    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && current != undefined) {
+        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+        outputField.innerHTML = addAsterisk(result);
+    }
+});
+nextDateButton === null || nextDateButton === void 0 ? void 0 : nextDateButton.addEventListener("click", (e) => {
+    let current = lineHistory.currentDate;
+    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && current != undefined) {
+        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
         outputField.innerHTML = addAsterisk(result);
     }
 });
