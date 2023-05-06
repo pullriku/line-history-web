@@ -303,12 +303,13 @@ function writeResult(result, htmlElement) {
     if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
+    console.log(currentDateField, lineHistory.currentDate);
     if (currentDateField) {
-        const currentDate = lineHistory.currentDate;
+        let currentDate = lineHistory.currentDate;
         if (currentDate != undefined) {
             const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
             const date = ("00" + currentDate.getDate().toString()).slice(-2);
-            currentDateField.setAttribute("value", `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`);
+            currentDateField.value = `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`;
             console.log(`${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`);
         }
     }
