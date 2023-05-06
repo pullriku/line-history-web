@@ -244,11 +244,13 @@ p{
 
 .dateChangeButton {
     border: none;
-    padding: 0.4rem 1.5rem;
+    padding: 0.3rem 1.4rem;
     font-size: 1.4rem;
+    height: auto;
 }
 
 #currentDateField { 
     font-size: 1.4rem;
-    border-bottom: none
+    border-bottom: none;
+    height: auto;
 }

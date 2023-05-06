@@ -203,9 +203,7 @@ function runSearchByDate(date) {
     console.log(date);
     const outputField = document.getElementById("outputField");
     let result = runCommand(date, lineHistory);
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 }
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
