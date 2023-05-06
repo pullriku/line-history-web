@@ -330,12 +330,25 @@ nextDateButton?.addEventListener("click", (e) => {
     }
 });
 
+currentDateField?.addEventListener("change", (e) => {
+    let result = runCommand((currentDateField as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
+    writeResult(result, outputField);
+});
+
 function writeResult(result: string, htmlElement?: HTMLElement | null): void {
     if (htmlElement?.innerHTML && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
     if(currentDateField){
-        currentDateField.innerHTML = "🗓️" + (lineHistory.currentDate?.toLocaleString().split(' ')[0] ?? "");
+        const currentDate = lineHistory.currentDate;
+        if(currentDate != undefined){
+            const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
+            const date = ("00" + currentDate.getDate().toString()).slice(-2);
+            currentDateField.setAttribute("value", `${currentDate?.getFullYear()}-${month}-${date}`)
+            console.log(`${currentDate?.getFullYear()}-${month}-${date}`);
+            
+            
+        }
     }
 }
 

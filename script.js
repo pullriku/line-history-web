@@ -295,13 +295,22 @@ nextDateButton === null || nextDateButton === void 0 ? void 0 : nextDateButton.a
         writeResult(result, outputField);
     }
 });
+currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.addEventListener("change", (e) => {
+    let result = runCommand(currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.value.replace(/-/g, "/"), lineHistory);
+    writeResult(result, outputField);
+});
 function writeResult(result, htmlElement) {
-    var _a, _b;
     if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
     if (currentDateField) {
-        currentDateField.innerHTML = "🗓️" + ((_b = (_a = lineHistory.currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleString().split(' ')[0]) !== null && _b !== void 0 ? _b : "");
+        const currentDate = lineHistory.currentDate;
+        if (currentDate != undefined) {
+            const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
+            const date = ("00" + currentDate.getDate().toString()).slice(-2);
+            currentDateField.setAttribute("value", `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`);
+            console.log(`${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`);
+        }
     }
 }
 let file;

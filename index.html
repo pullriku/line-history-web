@@ -40,20 +40,18 @@
             </p>
         </div>
         <div class="menu">
-            <p>
+            <!-- <p>
                 <label for="dateTimeInput">📅日付で検索: </label><br>
                 <input type="date" id="dateTimeInput">
-                <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
                 <button type="button" id="dateSubmitButton">確定</button>
-            </p>
+            </p> -->
             <p>
-                <label for="dateTimeInput">💬メッセージを検索: </label><br>
+                <label for="dateTimeInput">💬検索: </label><br>
                 <input type="text" id="wordInput">
-                <!-- <input type="text" id="inputText" required minlength="5" size="20"> -->
                 <button type="button" id="wordSubmitButton">確定</button>
             </p>
             <p>
-                <label for="">🎲ランダムで検索:</label><br>
+                <label for="">🎲ランダム表示:</label><br>
                 <button type="button" id="randomSubmitButton">確定</button>
             </p>
         </div>
@@ -64,7 +62,7 @@
                     <button type="button" class="dateChangeButton" id="previousDateButton">👈</button>
                 </li>
                 <li>
-                    <button class="dateChangeButton" id="currentDateField">🗓️</button>
+                    <input type="date" class="dateChangeButton" id="currentDateField" value="2022-01-01"></button>
                 </li>
                 <li>
                     <button type="button" class="dateChangeButton" id="nextDateButton">👉</button>

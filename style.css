@@ -161,7 +161,7 @@ nav ul li, .dateChangeButton{
     transition: .5s;
 }
 
-nav ul li a, nav ul li button, .dateChangeButton{
+nav ul li a, nav ul li button,nav ul li input, .dateChangeButton{
     font-size: 1em;
     text-decoration: none;
     color: var(--text-color);
@@ -238,11 +238,14 @@ p{
     padding-left: 0%;
 }
 
+#changeButtonArea ul li *{
+    border-bottom: var(--text-color) 1.5px solid;
+}
+
 .dateChangeButton {
     border: none;
     padding: 0.4rem 1.5rem;
     font-size: 1.4rem;
-    border-bottom: var(--text-color) 1.5px solid;
 }
 
 #currentDateField { 
