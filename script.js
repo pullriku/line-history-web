@@ -104,13 +104,20 @@ class LineHistory {
         }
         let result = "この日の履歴はありません";
         let foundData = false;
+        let tries = 100;
         while (!foundData) {
             let randomNum = this.getRandom(first, today);
             let date = new Date(randomNum);
-            // Assuming searchByDate is a separate function that takes a date string and returns data
             result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
             if (result.search("この日の履歴はありません") == -1) {
                 foundData = true;
+            }
+            else {
+                tries--;
+                if (tries == 0) {
+                    result = "見つかりませんでした。";
+                    break;
+                }
             }
         }
         return result;
