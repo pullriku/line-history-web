@@ -37,7 +37,7 @@ class LineHistory {
                 if (dateTmp.getTime() == dateInput.getTime()) {
                     countStart = i;
                     countFlag = true;
-                    output += `<h3 style="display:inline">${line}</h3><br>`;
+                    output += `<h3 style="display:inline;font-family: sans-serif;">${line}</h3><br>`;
                 } else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
                     break;
