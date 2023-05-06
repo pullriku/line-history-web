@@ -38,7 +38,7 @@ class LineHistory {
                 if (dateTmp.getTime() == dateInput.getTime()) {
                     countStart = i;
                     countFlag = true;
-                    output += `<h3 style="display:inline;font-family: sans-serif;">${line}</h3><br>`;
+                    output += `${line}<br>`;
                     this._currentDate = dateTmp;
                 }
                 else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
@@ -220,6 +220,7 @@ const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
 const nextDateButton = document.getElementById("nextDateButton");
 const previousDateButton = document.getElementById("previousDateButton");
+const currentDateField = document.getElementById("currentDateField");
 let lineHistory = new LineHistory();
 const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 let isLightMode = !mediaQuery.matches;
@@ -268,38 +269,41 @@ wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.a
 });
 dateSubmitButton === null || dateSubmitButton === void 0 ? void 0 : dateSubmitButton.addEventListener("click", (e) => {
     let result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"), lineHistory);
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 });
 wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", (e) => {
     let result = runCommand(`/search ${inputWord}`, lineHistory);
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 });
 randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
     let result = runCommand(`/random`, lineHistory);
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 });
 previousDateButton === null || previousDateButton === void 0 ? void 0 : previousDateButton.addEventListener("click", (e) => {
     let current = lineHistory.currentDate;
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && current != undefined) {
+    if (current != undefined) {
         let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
         let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        outputField.innerHTML = addAsterisk(result);
+        writeResult(result, outputField);
     }
 });
 nextDateButton === null || nextDateButton === void 0 ? void 0 : nextDateButton.addEventListener("click", (e) => {
     let current = lineHistory.currentDate;
-    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && current != undefined) {
+    if (current != undefined) {
         let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
         let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        outputField.innerHTML = addAsterisk(result);
+        writeResult(result, outputField);
     }
 });
+function writeResult(result, htmlElement) {
+    var _a, _b;
+    if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
+        htmlElement.innerHTML = addAsterisk(result);
+    }
+    if (currentDateField) {
+        currentDateField.innerHTML = "🗓️" + ((_b = (_a = lineHistory.currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleString().split(' ')[0]) !== null && _b !== void 0 ? _b : "");
+    }
+}
 let file;
 let text;
 fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener("change", (e) => {

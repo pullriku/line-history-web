@@ -48,7 +48,7 @@ class LineHistory {
                 if (dateTmp.getTime() == dateInput.getTime()) {
                     countStart = i;
                     countFlag = true;
-                    output += `<h3 style="display:inline;font-family: sans-serif;">${line}</h3><br>`;
+                    output += `${line}<br>`;
                     this._currentDate = dateTmp;
                 } else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
@@ -237,6 +237,7 @@ const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
 const nextDateButton = document.getElementById("nextDateButton");
 const previousDateButton = document.getElementById("previousDateButton");
+const currentDateField = document.getElementById("currentDateField");
 
 let lineHistory = new LineHistory();
 
@@ -296,44 +297,47 @@ wordInputField?.addEventListener("keyup", (e) => {
 
 dateSubmitButton?.addEventListener("click", (e) => {
     let result = runCommand((dateInput as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
-    if (outputField?.innerHTML && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 })
 
 wordSubmitButton?.addEventListener("click", (e) => {
     let result = runCommand(`/search ${inputWord}`, lineHistory);
-    if (outputField?.innerHTML && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 })
 
 randomSubmitButton?.addEventListener("click", (e) => {
     let result = runCommand(`/random`, lineHistory);
-    if (outputField?.innerHTML && result != "") {
-        outputField.innerHTML = addAsterisk(result);
-    }
+    writeResult(result, outputField);
 })
 
 previousDateButton?.addEventListener("click", (e) => {
     let current = lineHistory.currentDate
     
-    if(outputField?.innerHTML && current != undefined){
+    if(current != undefined){
         let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
         let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        outputField.innerHTML = addAsterisk(result);
+        writeResult(result, outputField);
     }
 });
 
 nextDateButton?.addEventListener("click", (e) => {
     let current = lineHistory.currentDate
 
-    if(outputField?.innerHTML && current != undefined){
+    if(current != undefined){
         let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
         let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        outputField.innerHTML = addAsterisk(result);
+        writeResult(result, outputField);
     }
 });
+
+function writeResult(result: string, htmlElement?: HTMLElement | null): void {
+    if (htmlElement?.innerHTML && result != "") {
+        htmlElement.innerHTML = addAsterisk(result);
+    }
+    if(currentDateField){
+        currentDateField.innerHTML = "🗓️" + (lineHistory.currentDate?.toLocaleString().split(' ')[0] ?? "");
+    }
+}
 
 let file: FileList;
 let text: string | ArrayBuffer;
