@@ -109,7 +109,7 @@ class LineHistory {
             let date = new Date(randomNum);
             // Assuming searchByDate is a separate function that takes a date string and returns data
             result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
-            if (result != "この日の履歴はありません") {
+            if (result.search("この日の履歴はありません") == -1) {
                 foundData = true;
             }
         }
@@ -168,6 +168,7 @@ function runCommand(command_, history) {
     else if (commandName == "/help") {
     }
     else if (commandName == "/random") {
+        output = history.searchByRandom();
     }
     else if (commandName == "/search") {
         output = history.searchByKeyword(command[1]);
@@ -195,14 +196,6 @@ function runSearchByDate(date) {
         outputField.innerHTML = addAsterisk(result);
     }
 }
-// function runSearchByDate(date: string): void {
-//     console.log(date);
-//     const outputField = document.getElementById("outputField");
-//     let result = runCommand(date);
-//     if (outputField?.innerHTML && result != "") {
-//         outputField.innerHTML = addAsterisk(result);
-//     }
-// }
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
 const dateInput = document.getElementById("dateTimeInput");
@@ -210,6 +203,7 @@ const dateSubmitButton = document.getElementById("dateSubmitButton");
 const wordInputField = document.getElementById("wordInput");
 let inputWord = "";
 const wordSubmitButton = document.getElementById("wordSubmitButton");
+const randomSubmitButton = document.getElementById("randomSubmitButton");
 const displayModeSwitch = document.getElementById("displayModeSwitch");
 const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
@@ -217,10 +211,6 @@ let lineHistory = new LineHistory();
 const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 let isLightMode = !mediaQuery.matches;
 setManualDisplayMode(isLightMode);
-// darkModeMediaQuery.addEventListener("change", (e) => {
-//     isLightMode = !e.matches;
-//     setDisplayMode(isLightMode);
-// })
 if (outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) {
     outputField.innerHTML = `
         <br>
@@ -253,12 +243,10 @@ if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
             ordinal = "th";
             break;
     }
-    // title.innerHTML += `<span id="specialMessage">🎉${yearDiff}${ordinal} Anniv!</span>`;
     specialMessage.innerHTML = `🎉${yearDiff}${ordinal} Anniv!`;
     specialMessage.style.display = "block";
 }
 if (month == 1 && day == 1 && specialMessage) {
-    // title.innerHTML += `<span id="specialMessage">HappyNewYear!</span>`
     specialMessage.innerHTML = `HappyNewYear!`;
     specialMessage.style.display = "block";
 }
@@ -277,6 +265,12 @@ wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitBu
         outputField.innerHTML = addAsterisk(result);
     }
 });
+randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
+    let result = runCommand(`/random`, lineHistory);
+    if ((outputField === null || outputField === void 0 ? void 0 : outputField.innerHTML) && result != "") {
+        outputField.innerHTML = addAsterisk(result);
+    }
+});
 let file;
 let text;
 fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener("change", (e) => {
@@ -288,7 +282,6 @@ fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener
         var _a;
         text = (_a = reader.result) !== null && _a !== void 0 ? _a : "";
         if (typeof text == "string") {
-            // let historyData = text.replace(/\r/, "").split("\n");
             lineHistory = new LineHistory(text);
         }
     };
