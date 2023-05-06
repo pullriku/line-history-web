@@ -92,7 +92,7 @@ class LineHistory {
         }
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
-    searchByRandom() {
+    searchByRandom(tries = 1000) {
         const today = new Date().getTime();
         let first = 0;
         for (let i = 0; i < this.historyData.length; i++) {
@@ -104,7 +104,6 @@ class LineHistory {
         }
         let result = "この日の履歴はありません";
         let foundData = false;
-        let tries = 100;
         while (!foundData) {
             let randomNum = this.getRandom(first, today);
             let date = new Date(randomNum);

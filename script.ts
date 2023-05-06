@@ -98,7 +98,7 @@ class LineHistory {
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
-    searchByRandom(): string {
+    searchByRandom(tries: number = 1000): string {
         const today = new Date().getTime();
         let first = 0;
 
@@ -113,7 +113,6 @@ class LineHistory {
         let result = "この日の履歴はありません";
         let foundData = false;
 
-        let tries = 100;
         while (!foundData) {
             let randomNum = this.getRandom(first, today);
             let date = new Date(randomNum);
@@ -153,7 +152,7 @@ class LineHistory {
         }
         return result;
     }
-
+    
     private checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {
         return year > 0
             && 0 < month && month < 13
