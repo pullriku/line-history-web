@@ -155,7 +155,7 @@ nav ul li, .dateChangeButton{
     background-color: var(--nav-color);
     margin-right: 5px;
     border-radius: 5px;
-    border-bottom: 2px solid black;
+    border-bottom: 1.5px solid var(--text-color);
     font-size: small;
 
     transition: .5s;
@@ -242,7 +242,7 @@ p{
     border: none;
     padding: 0.4rem 1.5rem;
     font-size: 1.4rem;
-    border-bottom: black 2px solid;
+    border-bottom: var(--text-color) 1.5px solid;
 }
 
 #currentDateField { 
