@@ -99,6 +99,7 @@ class LineHistory {
         if (output == "") {
             output = "見つかりませんでした。";
         }
+        this._currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
     searchByRandom(tries = 1000) {
@@ -311,7 +312,9 @@ function writeResult(result, htmlElement) {
             const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
             const date = ("00" + currentDate.getDate().toString()).slice(-2);
             currentDateField.value = `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`;
-            console.log(`${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`);
+        }
+        else {
+            currentDateField.value = "";
         }
     }
 }

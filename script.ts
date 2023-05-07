@@ -12,7 +12,7 @@ class LineHistory {
 
     constructor(data?: string) {
         if (data != null) {
-            this.historyData = data.replace(/\r/, "").split("\n");
+            this.historyData = data.replace(/\r/g, "").split("\n");
         } else {
             this.historyData = [];
         }
@@ -107,6 +107,7 @@ class LineHistory {
         if (output == "") {
             output = "見つかりませんでした。";
         }
+        this._currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
@@ -350,9 +351,8 @@ function writeResult(result: string, htmlElement?: HTMLElement | null): void {
             const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
             const date = ("00" + currentDate.getDate().toString()).slice(-2);
             currentDateField.value = `${currentDate?.getFullYear()}-${month}-${date}`;
-            console.log(`${currentDate?.getFullYear()}-${month}-${date}`);
-            
-            
+        } else {
+            currentDateField.value = "";
         }
     }
 }
