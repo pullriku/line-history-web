@@ -1,8 +1,5 @@
-test.js
 git*
 node_modules
 .*
 package*
 test*
-test.html
-emaki.js
