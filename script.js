@@ -8,7 +8,7 @@ Patterns.MONTH_DAY = /\d{2}/g;
 class LineHistory {
     constructor(data) {
         if (data != null) {
-            this.historyData = data.replace(/\r/, "").split("\n");
+            this.historyData = data.replace(/\r/g, "").split("\n");
         }
         else {
             this.historyData = [];

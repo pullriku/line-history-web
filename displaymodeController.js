@@ -7,11 +7,18 @@
         setDisplayMode(!darkModeMediaQuery.matches);
     });
     function setDisplayMode(isLightMode) {
+        const displayModeSwitch = document.getElementById("displayModeSwitch");
         if (isLightMode) {
             document.documentElement.setAttribute("theme", "light");
+            if (displayModeSwitch) {
+                displayModeSwitch.innerHTML = "🌚<br>ダーク";
+            }
         }
         else {
             document.documentElement.setAttribute("theme", "dark");
+            if (displayModeSwitch) {
+                displayModeSwitch.innerHTML = "🌝<br>ライト";
+            }
         }
     }
 }
