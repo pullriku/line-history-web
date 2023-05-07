@@ -230,14 +230,17 @@ if (outputField === null || outputField === void 0 ? void 0 : outputField.innerH
         <br>
         `;
 }
-// 特別な表示の処理
-// 毎年2/10から2/16に表示
-// const today = new Date(2023,2-1,13);
 const today = new Date();
 const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const day = today.getDate();
 const yearDiff = year - 2022;
+const monthString = ("00" + month.toString()).slice(-2);
+const dayString = ("00" + day.toString()).slice(-2);
+currentDateField.value = `${year}-${monthString}-${dayString}`;
+// 特別な表示の処理
+// 毎年2/10から2/16に表示
+// const today = new Date(2023,2-1,13);
 let ordinal; // 序数詞
 if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
     const onesPlace = yearDiff % 10;
