@@ -175,7 +175,7 @@ function showLineInfoAlert(date, lineNumber) {
     const info = date.split("/").slice(0, 3);
     const month = zeroPadding(Number.parseInt(info[1]), 2);
     const day = zeroPadding(Number.parseInt(info[2]), 2);
-    alert(`この行の情報:\n${year}/${month}/${day}:${lineNumber}`);
+    alert(`この行の情報:\n${year}/${month}/${day}@${lineNumber}`);
 }
 function runCommand(command_, history) {
     let command = command_.split(" ");
