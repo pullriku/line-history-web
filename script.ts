@@ -107,9 +107,9 @@ class LineHistory {
                         if (date.getMonth() <= 8) spaceRemoveCounter++;
                         if (date.getDate() <= 9) spaceRemoveCounter++;
 
-                        let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
                         let lineNum = i-countStart;
-                        output += `<a href="javascript:runSearchByDate('${outputElement}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
+                        let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`; 
+                        output += `<a href="javascript:runSearchByDate('${outputElement}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${outputElement}@${lineNum}</spam></a> ${line}<br>`;
                     }
                 }
             }
