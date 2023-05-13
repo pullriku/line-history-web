@@ -57,7 +57,11 @@ class LineHistory {
                     break;
                 }
             } else if (countFlag) {
-                output += `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${i-countStart});">${line}</a><br>`;
+                let lineInfo = line.split("\t");
+                if(lineInfo.length >= 2) {
+                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${i-countStart});">${lineInfo[0]}</a>`;
+                }
+                output += `${lineInfo.join("\t")}<br>`;
                 if (i == this.historyData.length - 1) {
                     countStop = i;
                     break;

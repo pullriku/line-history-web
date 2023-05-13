@@ -49,8 +49,11 @@ class LineHistory {
                 }
             }
             else if (countFlag) {
-                output += `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${i - countStart});">${line}</a><br>`;
-                // output += `${line}<br>`;
+                let lineInfo = line.split("\t");
+                if (lineInfo.length >= 2) {
+                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${i - countStart});">${lineInfo[0]}</a>`;
+                }
+                output += `${lineInfo.join("\t")}<br>`;
                 if (i == this.historyData.length - 1) {
                     countStop = i;
                     break;
