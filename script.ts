@@ -4,6 +4,8 @@ class Patterns {
     static DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
     static YEAR = /^20\d{2}/g;
     static MONTH_DAY = /\d{2}/g;
+
+    static DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 }
 
 class LineHistory {
@@ -55,7 +57,7 @@ class LineHistory {
                     break;
                 }
             } else if (countFlag) {
-                output += `${line}<br>`;
+                output += `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${i-countStart});">${line}</a><br>`;
                 if (i == this.historyData.length - 1) {
                     countStop = i;
                     break;
@@ -179,6 +181,15 @@ function addAsterisk(message: string): string {
     return result;
 }
 
+function showLineInfoAlert(date: string, lineNumber: number): void {
+    const info = date.split("/").slice(0, 3);
+
+    const month = zeroPadding(Number.parseInt(info[1]), 2);
+    const day = zeroPadding(Number.parseInt(info[2]), 2);
+
+    alert(`この行の情報:\n${year}/${month}/${day}:${lineNumber}`);
+}
+
 function runCommand(command_: string, history: LineHistory): string {
     let command: string[] = command_.split(" ");
     if (command.length < 5) {
@@ -216,12 +227,18 @@ function makeErrorMessage(message: string): string {
     return result;
 }
 
-function runSearchByDate(date: string): void {
-    console.log(date);
-    const outputField = document.getElementById("outputField");
-    let result = runCommand(date, lineHistory);
-    writeResult(result, outputField);
+function zeroPadding(number: number, length: number): string {
+    const numberString = number.toString();
+    if(numberString.length >= length) return numberString;
+    return (Array(length).join('0') + numberString).slice(-length);
 }
+
+// function runSearchByDate(date: string): void {
+//     console.log(date);
+//     const outputField = document.getElementById("outputField");
+//     let result = runCommand(date, lineHistory);
+//     writeResult(result, outputField);
+// }
 
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
@@ -343,7 +360,6 @@ function writeResult(result: string, htmlElement?: HTMLElement | null): void {
     if (htmlElement?.innerHTML && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
-    console.log(currentDateField, lineHistory.currentDate);
     
     if(currentDateField){
         let currentDate = lineHistory.currentDate;

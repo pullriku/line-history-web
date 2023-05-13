@@ -5,6 +5,7 @@ class Patterns {
 Patterns.DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 Patterns.YEAR = /^20\d{2}/g;
 Patterns.MONTH_DAY = /\d{2}/g;
+Patterns.DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 class LineHistory {
     constructor(data) {
         if (data != null) {
@@ -26,6 +27,7 @@ class LineHistory {
             && this.historyData.length != 0;
     }
     searchByDate(dateString) {
+        var _a;
         let dateInput = this.generateDate(dateString);
         let countStart = -1;
         let countStop = -1;
@@ -47,7 +49,8 @@ class LineHistory {
                 }
             }
             else if (countFlag) {
-                output += `${line}<br>`;
+                output += `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${i - countStart});">${line}</a><br>`;
+                // output += `${line}<br>`;
                 if (i == this.historyData.length - 1) {
                     countStop = i;
                     break;
@@ -165,6 +168,12 @@ function addAsterisk(message) {
     }
     return result;
 }
+function showLineInfoAlert(date, lineNumber) {
+    const info = date.split("/").slice(0, 3);
+    const month = zeroPadding(Number.parseInt(info[1]), 2);
+    const day = zeroPadding(Number.parseInt(info[2]), 2);
+    alert(`この行の情報:\n${year}/${month}/${day}:${lineNumber}`);
+}
 function runCommand(command_, history) {
     let command = command_.split(" ");
     if (command.length < 5) {
@@ -200,12 +209,18 @@ function makeErrorMessage(message) {
     }
     return result;
 }
-function runSearchByDate(date) {
-    console.log(date);
-    const outputField = document.getElementById("outputField");
-    let result = runCommand(date, lineHistory);
-    writeResult(result, outputField);
+function zeroPadding(number, length) {
+    const numberString = number.toString();
+    if (numberString.length >= length)
+        return numberString;
+    return (Array(length).join('0') + numberString).slice(-length);
 }
+// function runSearchByDate(date: string): void {
+//     console.log(date);
+//     const outputField = document.getElementById("outputField");
+//     let result = runCommand(date, lineHistory);
+//     writeResult(result, outputField);
+// }
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
 const dateInput = document.getElementById("dateTimeInput");
@@ -305,7 +320,6 @@ function writeResult(result, htmlElement) {
     if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
-    console.log(currentDateField, lineHistory.currentDate);
     if (currentDateField) {
         let currentDate = lineHistory.currentDate;
         if (currentDate != undefined) {

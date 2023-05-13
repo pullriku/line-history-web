@@ -254,3 +254,9 @@ p{
     border-bottom: none;
     height: auto;
 }
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: .5s;
+}
