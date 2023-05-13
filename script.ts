@@ -58,8 +58,9 @@ class LineHistory {
                 }
             } else if (countFlag) {
                 let lineInfo = line.split("\t");
+                let lineNum = i-countStart;
                 if(lineInfo.length >= 2) {
-                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${i-countStart});">${lineInfo[0]}</a>`;
+                    lineInfo[0] = `<a id="${lineNum}" href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
                 }
                 output += `${lineInfo.join("\t")}<br>`;
                 if (i == this.historyData.length - 1) {
@@ -81,6 +82,7 @@ class LineHistory {
         let output = "";
         let date: Date = new Date(1, 1, 1);
         let max_date = new Date(1970, 1, 1);
+        let countStart: number = -1;
 
         if (keyword.length > 1) {
             for (let i = 0; i < this.historyData.length; i++) {
@@ -90,6 +92,7 @@ class LineHistory {
                     if (this.generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
                         date = this.generateDate(line.substring(0, 10));
                         max_date = date;
+                        countStart = i;
                     }
                 } else {
                     if (line.search(keyword) != -1) {
@@ -105,7 +108,8 @@ class LineHistory {
                         if (date.getDate() <= 9) spaceRemoveCounter++;
 
                         let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
-                        output += `<a href="javascript:runSearchByDate('${outputElement}');" id="dateLink"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
+                        let lineNum = i-countStart;
+                        output += `<a href="javascript:runSearchByDate('${outputElement}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">` + outputElement + `</spam></a> ${line}<br>`;
                     }
                 }
             }
@@ -237,12 +241,15 @@ function zeroPadding(number: number, length: number): string {
     return (Array(length).join('0') + numberString).slice(-length);
 }
 
-// function runSearchByDate(date: string): void {
-//     console.log(date);
-//     const outputField = document.getElementById("outputField");
-//     let result = runCommand(date, lineHistory);
-//     writeResult(result, outputField);
-// }
+function runSearchByDate(date: string, id?: string): void {
+    const outputField = document.getElementById("outputField");
+    let result = runCommand(date, lineHistory);
+    writeResult(result, outputField);
+
+    if(id) {
+        document.getElementById(id)?.scrollIntoView(true);
+    }
+}
 
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
