@@ -94,21 +94,17 @@ class LineHistory {
                         if (line.length >= 60) {
                             line = `${line.substring(0, 60)}...`;
                         }
-                        let spaceRemoveCounter = 0;
-                        if (date.getMonth() <= 8)
-                            spaceRemoveCounter++;
-                        if (date.getDate() <= 9)
-                            spaceRemoveCounter++;
                         let lineNum = i - countStart;
-                        let outputElement = `${date.toLocaleDateString("ja-jp").substring(0, 10 - spaceRemoveCounter).replace(/-/g, "/")}`;
-                        output += `<a href="javascript:runSearchByDate('${outputElement}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${outputElement}@${lineNum}</spam></a> ${line}<br>`;
+                        const year = date.getFullYear();
+                        const month = zeroPadding(date.getMonth() + 1, 2);
+                        const day = zeroPadding(date.getDate(), 2);
+                        const dateString = `${year}/${month}/${day}`;
+                        output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line}<br>`;
                     }
                 }
             }
         }
-        if (output == "") {
-            output = "見つかりませんでした。";
-        }
+        output = output == "" ? "見つかりませんでした。" : output;
         this._currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
@@ -177,6 +173,7 @@ function addAsterisk(message) {
 }
 function showLineInfoAlert(date, lineNumber) {
     const info = date.split("/").slice(0, 3);
+    const year = Number.parseInt(info[0]);
     const month = zeroPadding(Number.parseInt(info[1]), 2);
     const day = zeroPadding(Number.parseInt(info[2]), 2);
     alert(`この行の情報:\n${year}/${month}/${day}@${lineNumber}`);
