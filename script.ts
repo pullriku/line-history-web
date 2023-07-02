@@ -60,9 +60,9 @@ class LineHistory {
                 let lineInfo = line.split("\t");
                 let lineNum = i-countStart;
                 if(lineInfo.length >= 2) {
-                    lineInfo[0] = `<a id="${lineNum}" href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
+                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
                 }
-                output += `${lineInfo.join("\t")}<br>`;
+                output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
                 if (i == this.historyData.length - 1) {
                     countStop = i;
                     break;
@@ -84,38 +84,40 @@ class LineHistory {
         let max_date = new Date(1970, 1, 1);
         let countStart: number = -1;
 
-        if (keyword.length > 1) {
-            for (let i = 0; i < this.historyData.length; i++) {
-                let line = this.historyData[i];
+        if (keyword.length == 1) {
+            output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。\n";
+        }
 
-                if (Patterns.DATE.test(line)) {
-                    if (this.generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
-                        date = this.generateDate(line.substring(0, 10));
-                        max_date = date;
-                        countStart = i;
+        for (let i = 0; i < this.historyData.length; i++) {
+            let line = this.historyData[i];
+
+            if (Patterns.DATE.test(line)) {
+                if (this.generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
+                    date = this.generateDate(line.substring(0, 10));
+                    max_date = date;
+                    countStart = i;
+                }
+            } else {
+                if (line.search(keyword) != -1) {
+                    counter++;
+                    if (/\d{2}:\d{2}.*/.test(line)) {
+                        line = line.substring(6);
                     }
-                } else {
-                    if (line.search(keyword) != -1) {
-                        counter++;
-                        if (/\d{2}:\d{2}.*/.test(line)) {
-                            line = line.substring(6);
-                        }
-                        if (line.length >= 60) {
-                            line = `${line.substring(0, 60)}...`;
-                        }
-
-
-                        let lineNum = i-countStart;
-                        const year = date.getFullYear();
-                        const month = zeroPadding(date.getMonth() + 1, 2);
-                        const day = zeroPadding(date.getDate(), 2);
-                        const dateString = `${year}/${month}/${day}`;
-                        output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line}<br>`;
+                    if (line.length >= 60) {
+                        line = `${line.substring(0, 60)}...`;
                     }
+
+
+                    let lineNum = i-countStart;
+                    const year = date.getFullYear();
+                    const month = zeroPadding(date.getMonth() + 1, 2);
+                    const day = zeroPadding(date.getDate(), 2);
+                    const dateString = `${year}/${month}/${day}`;
+                    output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line}<br>`;
                 }
             }
-        
         }
+        
         output = output == "" ? "見つかりませんでした。" : output;
 
         this._currentDate = undefined;
@@ -175,8 +177,10 @@ class LineHistory {
     
     private checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {
         return year > 0
-            && 0 < month && month < 13
-            && 0 < day && day < 32;
+            && 0 < month 
+            && month < 13
+            && 0 < day 
+            && day < 32;
     }
 }
 
@@ -237,7 +241,7 @@ function makeErrorMessage(message: string): string {
     return result;
 }
 
-function zeroPadding(number: number, length: number): string {
+function zeroPadding(number: number | String, length: number): string {
     const numberString = number.toString();
     if(numberString.length >= length) return numberString;
     return (Array(length).join('0') + numberString).slice(-length);
@@ -288,17 +292,19 @@ const month = today.getMonth() + 1;
 const day = today.getDate();
 const yearDiff = year - 2022;
 
-const monthString = ("00" + month.toString()).slice(-2);
-const dayString = ("00" + day.toString()).slice(-2);
+const monthString = zeroPadding(month, 2);
+const dayString = zeroPadding(day, 2);
 currentDateField.value = `${year}-${monthString}-${dayString}`;
 
 
-// 特別な表示の処理
+// 特別な表示の処理 ///////////////////////////
+
+// n周年記念日の表示
 // 毎年2/10から2/16に表示
 // const today = new Date(2023,2-1,13);
 
-let ordinal: string; // 序数詞
 if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
+    let ordinal: string; // 序数詞
     const onesPlace = yearDiff % 10;
     switch (onesPlace) {
         case 1:
@@ -319,10 +325,13 @@ if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
 
 }
 
+// 新年の表示
 if (month == 1 && day == 1 && specialMessage) {
     specialMessage.innerHTML = `HappyNewYear!`;
     specialMessage.style.display = "block"
 }
+
+//////////////////////////////////////////////////////
 
 
 wordInputField?.addEventListener("keyup", (e) => {
@@ -377,8 +386,8 @@ function writeResult(result: string, htmlElement?: HTMLElement | null): void {
     if(currentDateField){
         let currentDate = lineHistory.currentDate;
         if(currentDate != undefined){
-            const month = ("00" + (currentDate.getMonth() + 1).toString()).slice(-2);
-            const date = ("00" + currentDate.getDate().toString()).slice(-2);
+            const month = zeroPadding(currentDate.getMonth() + 1, 2);
+            const date = zeroPadding(currentDate.getDate(), 2);
             currentDateField.value = `${currentDate?.getFullYear()}-${month}-${date}`;
         } else {
             currentDateField.value = "";
