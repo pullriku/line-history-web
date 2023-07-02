@@ -85,7 +85,7 @@ class LineHistory {
         let countStart: number = -1;
 
         if (keyword.length == 1) {
-            output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。\n";
+            output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
         }
 
         for (let i = 0; i < this.historyData.length; i++) {

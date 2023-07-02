@@ -76,7 +76,7 @@ class LineHistory {
         let max_date = new Date(1970, 1, 1);
         let countStart = -1;
         if (keyword.length == 1) {
-            output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。\n";
+            output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
         }
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
