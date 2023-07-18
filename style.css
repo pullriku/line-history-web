@@ -8,6 +8,7 @@
     --output-border: border-top: 0px;
     --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), #f2f2f7);
     --link-color: blue;
+    --gray-bar: #e2e2e2;
     /* --settings-color: lightgray */
 }
 
@@ -20,6 +21,7 @@
     --output-border: 1px solid rgb(101, 101, 101);
     --background-gradient: transparent;
     --link-color: rgb(156, 156, 248);
+    --gray-bar: #464646;
     /* --settings-color: #1C1C1E */
 }
 
@@ -259,4 +261,15 @@ a {
     color: var(--text-color);
     text-decoration: none;
     transition: .5s;
+}
+
+footer {
+    background-color: var(--gray-bar);
+    text-align: center;
+    padding: 20px;
+    transition: 1.0s;
+}
+
+footer a {
+    text-decoration: underline;
 }
