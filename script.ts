@@ -1,11 +1,11 @@
 class Patterns {
     private constructor() { }
 
-    static DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
-    static YEAR = /^20\d{2}/g;
-    static MONTH_DAY = /\d{2}/g;
+    static readonly DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
+    static readonly YEAR = /^20\d{2}/g;
+    static readonly MONTH_DAY = /\d{2}/g;
 
-    static DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
+    static readonly DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 }
 
 class LineHistory {
