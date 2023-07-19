@@ -265,7 +265,6 @@ const wordInputField = document.getElementById("wordInput");
 let inputWord = "";
 const wordSubmitButton = document.getElementById("wordSubmitButton");
 const randomSubmitButton = document.getElementById("randomSubmitButton");
-const displayModeSwitch = document.getElementById("displayModeSwitch");
 const outputField = document.getElementById("outputField");
 const specialMessage = document.getElementById("specialMessage");
 const nextDateButton = document.getElementById("nextDateButton");
@@ -276,7 +275,6 @@ let lineHistory = new LineHistory();
 
 const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 let isLightMode = !mediaQuery.matches;
-setManualDisplayMode(isLightMode);
 
 if (outputField?.innerHTML) {
     outputField.innerHTML = `
@@ -411,20 +409,3 @@ fileField?.addEventListener("change", (e) => {
 
     }
 }, false);
-
-displayModeSwitch?.addEventListener("click", () => {
-    isLightMode = !isLightMode;
-    setManualDisplayMode(isLightMode);
-})
-
-function setManualDisplayMode(isLightMode: boolean): void {
-    if (displayModeSwitch != null) {
-        if (isLightMode) {
-            document.documentElement.setAttribute("theme", "light");
-            displayModeSwitch.innerHTML = "🌚<br>ダーク";
-        } else {
-            document.documentElement.setAttribute("theme", "dark");
-            displayModeSwitch.innerHTML = "🌝<br>ライト";
-        }
-    }
-}
