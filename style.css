@@ -31,7 +31,6 @@ html{
     background-color: var(--background-color);
     transition: 1.0s;
     min-height: 100vh;
-
 }
 
 body{

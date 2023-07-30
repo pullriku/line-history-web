@@ -1,4 +1,10 @@
 "use strict";
+/**
+ * @fileoverview このファイルは、履歴ファイルを読み込み、コマンドを実行するためのスクリプト
+ */
+/**
+ * @classdesc 日付のパターンを保持するクラス
+ */
 class Patterns {
     constructor() { }
 }
@@ -6,6 +12,9 @@ Patterns.DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 Patterns.YEAR = /^20\d{2}/g;
 Patterns.MONTH_DAY = /\d{2}/g;
 Patterns.DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
+/**
+ * @classdesc 履歴ファイルを保持するクラス
+ */
 class LineHistory {
     constructor(data) {
         if (data != null) {
@@ -14,6 +23,7 @@ class LineHistory {
         else {
             this.historyData = [];
         }
+        this.dateIndices = this.calcDateIndices();
         this._currentDate = undefined;
     }
     get currentDate() {
@@ -27,8 +37,50 @@ class LineHistory {
             && this.historyData.length != 0;
     }
     searchByDate(dateString) {
+        // return this.binSearchByDate(dateString);
+        return this.seqSearchByDate(dateString);
+    }
+    /**
+     * 二分探索バージョン
+     * 指定した日付の履歴を検索する
+     * @param dateString 日付を表す文字列 yyyy/mm/dd
+     * @returns 指定した日の履歴
+     */
+    // public binSearchByDate(dateString: string): string {
+    //     const dateInput = generateDate(dateString);
+    //     let countStart: number = -1;
+    //     let countStop: number = -1;
+    //     let countFlag: boolean = false;
+    //     let output: string = "";
+    //     let left = 0;
+    //     let right = this.dateIndices.length - 1;
+    //     let mid = Math.floor((left + right) / 2);
+    //     while (left <= right) {
+    //         let line = this.historyData[this.dateIndices[mid]];
+    //         let dateTmp = generateDate(line.substring(0, 10));
+    //         if (dateTmp.getTime() == dateInput.getTime()) {
+    //             countStart = this.dateIndices[mid];
+    //             countFlag = true;
+    //             output += `${line}<br>`;
+    //             this._currentDate = dateTmp;
+    //             break;
+    //         } else if (dateInput.getTime() < dateTmp.getTime()) {
+    //             right = mid - 1;
+    //         } else {
+    //             left = mid + 1;
+    //         }
+    //         mid = Math.floor((left + right) / 2);
+    //     }
+    //     return output;
+    // }
+    /**
+     * 指定した日付の履歴を検索する
+     * @param dateString 日付を表す文字列 yyyy/mm/dd
+     * @returns 指定した日の履歴
+     */
+    seqSearchByDate(dateString) {
         var _a;
-        let dateInput = this.generateDate(dateString);
+        const dateInput = generateDate(dateString);
         let countStart = -1;
         let countStop = -1;
         let countFlag = false;
@@ -36,7 +88,7 @@ class LineHistory {
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (Patterns.DATE.test(line)) {
-                let dateTmp = this.generateDate(line.substring(0, 10));
+                let dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() == dateInput.getTime()) {
                     countStart = i;
                     countFlag = true;
@@ -81,8 +133,8 @@ class LineHistory {
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (Patterns.DATE.test(line)) {
-                if (this.generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
-                    date = this.generateDate(line.substring(0, 10));
+                if (generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
+                    date = generateDate(line.substring(0, 10));
                     max_date = date;
                     countStart = i;
                 }
@@ -115,14 +167,14 @@ class LineHistory {
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (Patterns.DATE.test(line)) {
-                first = this.generateDate(line.substring(0, 10)).getTime();
+                first = generateDate(line.substring(0, 10)).getTime();
                 break;
             }
         }
         let result = "この日の履歴はありません";
         let isFound = false;
         while (isFound == false && tries > 0) {
-            let randomNum = this.getRandom(first, today);
+            let randomNum = getRandom(first, today);
             let date = new Date(randomNum);
             result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
             if (result.search("この日の履歴はありません") == -1) {
@@ -134,36 +186,51 @@ class LineHistory {
             result = "見つかりませんでした。";
         return result;
     }
-    getRandom(n, m) {
-        let num = Math.floor(Math.random() * (m + 1 - n)) + n;
-        return num;
-    }
-    generateDate(dateString) {
-        const splitDate = dateString.split("/");
-        let result;
-        if (splitDate.length != 3) {
-            result = new Date(1970, 1, 1);
-        }
-        else {
-            const year = parseInt(splitDate[0]);
-            const month = parseInt(splitDate[1]);
-            const day = parseInt(splitDate[2]);
-            if (this.checkDate(year, month, day)) {
-                result = new Date(year, month - 1, day);
-            }
-            else {
-                result = new Date(1970, 1, 1);
+    calcDateIndices() {
+        let result = [];
+        let current = new Date(1, 1, 1);
+        for (let i = 0; i < this.historyData.length; i++) {
+            let line = this.historyData[i];
+            if (Patterns.DATE.test(line)) {
+                let dateTmp = generateDate(line.substring(0, 10));
+                if (dateTmp.getTime() >= current.getTime()) {
+                    current = dateTmp;
+                    result.push(i);
+                }
             }
         }
         return result;
     }
-    checkDate(year = 1970, month = 1, day = 1) {
-        return year > 0
-            && 0 < month
-            && month < 13
-            && 0 < day
-            && day < 32;
+}
+function checkDate(year = 1970, month = 1, day = 1) {
+    return year > 0
+        && 0 < month
+        && month < 13
+        && 0 < day
+        && day < 32;
+}
+function generateDate(dateString) {
+    const splitDate = dateString.split("/");
+    let result;
+    if (splitDate.length != 3) {
+        result = new Date(1970, 1, 1);
     }
+    else {
+        const year = parseInt(splitDate[0]);
+        const month = parseInt(splitDate[1]);
+        const day = parseInt(splitDate[2]);
+        if (checkDate(year, month, day)) {
+            result = new Date(year, month - 1, day);
+        }
+        else {
+            result = new Date(1970, 1, 1);
+        }
+    }
+    return result;
+}
+function getRandom(n, m) {
+    let num = Math.floor(Math.random() * (m + 1 - n)) + n;
+    return num;
 }
 function addAsterisk(message) {
     let result = "";
@@ -191,6 +258,7 @@ function runCommand(command_, history) {
     let commandName = command[0];
     let output = "";
     if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)) {
+        // output = history.searchByDate(commandName);
         output = history.searchByDate(commandName);
     }
     else if (commandName == "/help") {
