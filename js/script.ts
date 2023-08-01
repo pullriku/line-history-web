@@ -68,6 +68,7 @@ class LineHistory {
         for(let i = startIndex; i < this.historyData.length; i++){
             let line = this.historyData[i];
             if (i != startIndex && Patterns.DATE.test(line)) {
+                countStop = i;
                 break;
             }
 
@@ -77,6 +78,7 @@ class LineHistory {
                 lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
             }
             output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
+
             if (i == this.historyData.length - 1) {
                 countStop = i;
                 break;
@@ -185,31 +187,11 @@ class LineHistory {
     }
 
     public searchByRandom(tries: number = 1000): string {
-        const today = new Date().getTime();
-        let first = 0;
+        const dates = Object.keys(this.dateIndices);
+        const randomDate = dates[Math.floor(Math.random() * dates.length)];
 
-        for (let i = 0; i < this.historyData.length; i++) {
-            let line = this.historyData[i];
-            if (Patterns.DATE.test(line)) {
-                first = generateDate(line.substring(0, 10)).getTime();
-                break;
-            }
-        }
-
-        let result = "この日の履歴はありません";
-        let isFound = false;
-
-        while (isFound == false && tries > 0) {
-            let randomNum = getRandom(first, today);
-            let date = new Date(randomNum);
-            result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
-            if (result.search("この日の履歴はありません") == -1) {
-                isFound = true;
-            }
-            tries--;
-        }
-        if(tries == 0) result = "見つかりませんでした。";
-        return result;
+        const dateString = generateDate(randomDate).toLocaleDateString();
+        return this.searchByDate(dateString);
     }
 
     private calcDateIndices(): {[date: string]: number} {

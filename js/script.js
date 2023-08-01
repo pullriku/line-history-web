@@ -54,6 +54,7 @@ class LineHistory {
         for (let i = startIndex; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (i != startIndex && Patterns.DATE.test(line)) {
+                countStop = i;
                 break;
             }
             let lineInfo = line.split("\t");
@@ -159,29 +160,10 @@ class LineHistory {
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
     searchByRandom(tries = 1000) {
-        const today = new Date().getTime();
-        let first = 0;
-        for (let i = 0; i < this.historyData.length; i++) {
-            let line = this.historyData[i];
-            if (Patterns.DATE.test(line)) {
-                first = generateDate(line.substring(0, 10)).getTime();
-                break;
-            }
-        }
-        let result = "この日の履歴はありません";
-        let isFound = false;
-        while (isFound == false && tries > 0) {
-            let randomNum = getRandom(first, today);
-            let date = new Date(randomNum);
-            result = this.searchByDate(`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`);
-            if (result.search("この日の履歴はありません") == -1) {
-                isFound = true;
-            }
-            tries--;
-        }
-        if (tries == 0)
-            result = "見つかりませんでした。";
-        return result;
+        const dates = Object.keys(this.dateIndices);
+        const randomDate = dates[Math.floor(Math.random() * dates.length)];
+        const dateString = generateDate(randomDate).toLocaleDateString();
+        return this.searchByDate(dateString);
     }
     calcDateIndices() {
         let result = {};
