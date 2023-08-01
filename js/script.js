@@ -31,7 +31,7 @@ class LineHistory {
             ? new Date(this._currentDate)
             : undefined;
     }
-    get isExist() {
+    get exists() {
         return this.historyData != null
             && this.historyData != undefined
             && this.historyData.length != 0;
@@ -272,7 +272,7 @@ function runCommand(command_, history) {
     else {
         output = makeErrorMessage("command_error");
     }
-    if (history.isExist == false) {
+    if (history.exists == false) {
         output = "⚠️履歴ファイルを選択してください。";
     }
     return output;

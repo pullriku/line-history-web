@@ -11,7 +11,6 @@ class Patterns {
     static readonly DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
     static readonly YEAR = /^20\d{2}/g;
     static readonly MONTH_DAY = /\d{2}/g;
-
     static readonly DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 }
 
@@ -43,7 +42,7 @@ class LineHistory {
             : undefined;
     }
 
-    public get isExist(): boolean {
+    public get exists(): boolean {
         return this.historyData != null 
             && this.historyData != undefined 
             && this.historyData.length != 0;
@@ -309,7 +308,7 @@ function runCommand(command_: string, history: LineHistory): string {
         output = makeErrorMessage("command_error");
     }
 
-    if (history.isExist == false) {
+    if (history.exists == false) {
         output = "⚠️履歴ファイルを選択してください。"
     }
     return output;
