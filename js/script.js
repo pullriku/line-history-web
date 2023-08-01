@@ -37,42 +37,39 @@ class LineHistory {
             && this.historyData.length != 0;
     }
     searchByDate(dateString) {
-        // return this.binSearchByDate(dateString);
-        return this.seqSearchByDate(dateString);
+        return this.hashSearchByDate(dateString);
+        // return this.seqSearchByDate(dateString);
     }
-    /**
-     * 二分探索バージョン
-     * 指定した日付の履歴を検索する
-     * @param dateString 日付を表す文字列 yyyy/mm/dd
-     * @returns 指定した日の履歴
-     */
-    // public binSearchByDate(dateString: string): string {
-    //     const dateInput = generateDate(dateString);
-    //     let countStart: number = -1;
-    //     let countStop: number = -1;
-    //     let countFlag: boolean = false;
-    //     let output: string = "";
-    //     let left = 0;
-    //     let right = this.dateIndices.length - 1;
-    //     let mid = Math.floor((left + right) / 2);
-    //     while (left <= right) {
-    //         let line = this.historyData[this.dateIndices[mid]];
-    //         let dateTmp = generateDate(line.substring(0, 10));
-    //         if (dateTmp.getTime() == dateInput.getTime()) {
-    //             countStart = this.dateIndices[mid];
-    //             countFlag = true;
-    //             output += `${line}<br>`;
-    //             this._currentDate = dateTmp;
-    //             break;
-    //         } else if (dateInput.getTime() < dateTmp.getTime()) {
-    //             right = mid - 1;
-    //         } else {
-    //             left = mid + 1;
-    //         }
-    //         mid = Math.floor((left + right) / 2);
-    //     }
-    //     return output;
-    // }
+    hashSearchByDate(dateString) {
+        var _a;
+        const dateInput = generateDate(dateString);
+        this._currentDate = dateInput;
+        let output = "";
+        let startIndex = this.dateIndices[dateInput.toLocaleDateString()];
+        if (startIndex == undefined) {
+            output = "この日の履歴はありません。<br>";
+            return output;
+        }
+        let countStop = -1;
+        for (let i = startIndex; i < this.historyData.length; i++) {
+            let line = this.historyData[i];
+            if (i != startIndex && Patterns.DATE.test(line)) {
+                break;
+            }
+            let lineInfo = line.split("\t");
+            let lineNum = i - startIndex;
+            if (lineInfo.length >= 2) {
+                lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
+            }
+            output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
+            if (i == this.historyData.length - 1) {
+                countStop = i;
+                break;
+            }
+        }
+        output += `${countStop - startIndex}行<br>`;
+        return output;
+    }
     /**
      * 指定した日付の履歴を検索する
      * @param dateString 日付を表す文字列 yyyy/mm/dd
@@ -187,7 +184,7 @@ class LineHistory {
         return result;
     }
     calcDateIndices() {
-        let result = [];
+        let result = {};
         let current = new Date(1, 1, 1);
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
@@ -195,7 +192,7 @@ class LineHistory {
                 let dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() >= current.getTime()) {
                     current = dateTmp;
-                    result.push(i);
+                    result[dateTmp.toLocaleDateString()] = i;
                 }
             }
         }
