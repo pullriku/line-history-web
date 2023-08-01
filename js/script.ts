@@ -32,8 +32,12 @@ class LineHistory {
             this.historyData = [];
         }
         this.dateIndices = this.calcDateIndices();
-        this._currentDate = undefined;
+        this.currentDate = undefined;
         
+    }
+
+    public set currentDate(date: Date | undefined) {
+        this._currentDate = date;
     }
 
     public get currentDate(): Date | undefined {
@@ -54,32 +58,26 @@ class LineHistory {
     }
 
     public hashSearchByDate(dateString: string): string {
-        const dateInput = generateDate(dateString);
-        this._currentDate = dateInput;
+        const dateInput = this.currentDate = generateDate(dateString);
 
         let output: string = "";
         const startIndex = this.dateIndices[dateInput.toLocaleDateString()];
         if (startIndex == undefined) {
-            output = "この日の履歴はありません。<br>";
-            return output;
+            return "この日の履歴はありません。<br>";
         }
 
         let countStop: number = -1;
         for(let i = startIndex; i < this.historyData.length; i++){
             const line = this.historyData[i];
-            if (i != startIndex && Patterns.DATE.test(line)) {
+            if (Patterns.DATE.test(line) && i != startIndex) {
                 countStop = i;
                 break;
             }
 
-            const lineInfo = line.split("\t");
             const lineNum = i-startIndex;
-            if(lineInfo.length >= 2) {
-                lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
-            }
-            output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
+            output += createLineWithTime(line, lineNum, this.currentDate);
 
-            if (i == this.historyData.length - 1) {
+            if (i >= this.historyData.length - 1) {
                 countStop = i;
                 break;
             }
@@ -113,7 +111,7 @@ class LineHistory {
                     countStart = i;
                     countFlag = true;
                     output += `${line}<br>`;
-                    this._currentDate = dateTmp;
+                    this.currentDate = dateTmp;
                 } else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
                     break;
@@ -122,7 +120,7 @@ class LineHistory {
                 let lineInfo = line.split("\t");
                 let lineNum = i-countStart;
                 if(lineInfo.length >= 2) {
-                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this._currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
+                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${this.currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
                 }
                 output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
                 if (i == this.historyData.length - 1) {
@@ -182,7 +180,7 @@ class LineHistory {
         
         output = output == "" ? "見つかりませんでした。" : output;
 
-        this._currentDate = undefined;
+        this.currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
@@ -210,6 +208,18 @@ class LineHistory {
         }
         return result;
     }
+}
+
+function createLineWithTime(line: string, lineNum: number, currentDate?: Date): string {
+    const lineInfo = line.split("\t");
+    if(lineInfo.length >= 2) {
+        lineInfo[0] = `
+            <a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">
+                ${lineInfo[0]}
+            </a>
+        `;
+    }
+    return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
 }
 
 function checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {

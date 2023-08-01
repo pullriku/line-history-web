@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @fileoverview このファイルは、履歴ファイルを読み込み、コマンドを実行するためのスクリプト
+ * @fileoverview 履歴ファイルを読み込み、コマンドを実行するためのスクリプト
  */
 /**
  * @classdesc 日付のパターンを保持するクラス
@@ -24,7 +24,10 @@ class LineHistory {
             this.historyData = [];
         }
         this.dateIndices = this.calcDateIndices();
-        this._currentDate = undefined;
+        this.currentDate = undefined;
+    }
+    set currentDate(date) {
+        this._currentDate = date;
     }
     get currentDate() {
         return this._currentDate != undefined
@@ -41,29 +44,22 @@ class LineHistory {
         // return this.seqSearchByDate(dateString);
     }
     hashSearchByDate(dateString) {
-        var _a;
-        const dateInput = generateDate(dateString);
-        this._currentDate = dateInput;
+        const dateInput = this.currentDate = generateDate(dateString);
         let output = "";
         const startIndex = this.dateIndices[dateInput.toLocaleDateString()];
         if (startIndex == undefined) {
-            output = "この日の履歴はありません。<br>";
-            return output;
+            return "この日の履歴はありません。<br>";
         }
         let countStop = -1;
         for (let i = startIndex; i < this.historyData.length; i++) {
             const line = this.historyData[i];
-            if (i != startIndex && Patterns.DATE.test(line)) {
+            if (Patterns.DATE.test(line) && i != startIndex) {
                 countStop = i;
                 break;
             }
-            const lineInfo = line.split("\t");
             const lineNum = i - startIndex;
-            if (lineInfo.length >= 2) {
-                lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
-            }
-            output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
-            if (i == this.historyData.length - 1) {
+            output += createLineWithTime(line, lineNum, this.currentDate);
+            if (i >= this.historyData.length - 1) {
                 countStop = i;
                 break;
             }
@@ -91,7 +87,7 @@ class LineHistory {
                     countStart = i;
                     countFlag = true;
                     output += `${line}<br>`;
-                    this._currentDate = dateTmp;
+                    this.currentDate = dateTmp;
                 }
                 else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
                     countStop = i;
@@ -102,7 +98,7 @@ class LineHistory {
                 let lineInfo = line.split("\t");
                 let lineNum = i - countStart;
                 if (lineInfo.length >= 2) {
-                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
+                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this.currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
                 }
                 output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
                 if (i == this.historyData.length - 1) {
@@ -156,7 +152,7 @@ class LineHistory {
             }
         }
         output = output == "" ? "見つかりませんでした。" : output;
-        this._currentDate = undefined;
+        this.currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
     searchByRandom() {
@@ -180,6 +176,17 @@ class LineHistory {
         }
         return result;
     }
+}
+function createLineWithTime(line, lineNum, currentDate) {
+    const lineInfo = line.split("\t");
+    if (lineInfo.length >= 2) {
+        lineInfo[0] = `
+            <a href="javascript:showLineInfoAlert('${currentDate === null || currentDate === void 0 ? void 0 : currentDate.toLocaleDateString()}',${lineNum});">
+                ${lineInfo[0]}
+            </a>
+        `;
+    }
+    return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
 }
 function checkDate(year = 1970, month = 1, day = 1) {
     return year > 0
