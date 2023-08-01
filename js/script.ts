@@ -21,9 +21,12 @@ class LineHistory {
     /** 履歴データを改行で区切った配列 */
     private historyData: string[];
     /** historyDataの各日付のインデックスを保持する配列 */
-    private dateIndices: {[date: string]: number};
+    private _dateIndices: {[date: string]: number};
+    /** 日付の配列 */
+    private _dateArray: string[];
     /** 現在の日付．過去の日付に反応させないため．dateChangeButtonを実装するため． */
     private _currentDate?: Date;
+
 
     constructor(data?: string) {
         if (data != null) {
@@ -31,26 +34,32 @@ class LineHistory {
         } else {
             this.historyData = [];
         }
-        this.dateIndices = this.calcDateIndices();
+        this._dateIndices = this.calcDateIndices();
+        this._dateArray = Object.keys(this.dateIndices);
         this.currentDate = undefined;
-        
     }
 
     public set currentDate(date: Date | undefined) {
         this._currentDate = date;
     }
-
     public get currentDate(): Date | undefined {
         return this._currentDate != undefined 
             ? new Date(this._currentDate) 
             : undefined;
     }
 
+    public get dateIndices(): {[date: string]: number} {
+        return this._dateIndices;
+    }
+
+    public get dateArray(): string[] { return this._dateArray; }
+
     public get exists(): boolean {
         return this.historyData != null 
             && this.historyData != undefined 
             && this.historyData.length != 0;
     }
+
 
     public searchByDate(dateString: string): string { 
         return this.hashSearchByDate(dateString);
@@ -59,31 +68,20 @@ class LineHistory {
 
     public hashSearchByDate(dateString: string): string {
         const dateInput = this.currentDate = generateDate(dateString);
-
+        const inputString = dateInput.toLocaleDateString();
         let output: string = "";
-        const startIndex = this.dateIndices[dateInput.toLocaleDateString()];
+
+        const startIndex = this.dateIndices[inputString];
         if (startIndex == undefined) {
             return "この日の履歴はありません。<br>";
         }
 
-        let countStop: number = -1;
-        for(let i = startIndex; i < this.historyData.length; i++){
-            const line = this.historyData[i];
-            if (Patterns.DATE.test(line) && i != startIndex) {
-                countStop = i;
-                break;
-            }
+        const nextIndex = this.dateIndices[this.dateArray[this.dateArray.indexOf(inputString) + 1]] ?? this.historyData.length;
 
-            const lineNum = i-startIndex;
-            output += createLineWithTime(line, lineNum, this.currentDate);
-
-            if (i >= this.historyData.length - 1) {
-                countStop = i;
-                break;
-            }
-        }
-
-        output += `${countStop - startIndex}行<br>`;
+        this.historyData.slice(startIndex, nextIndex).forEach((line, index) => {
+            output += createLineWithTime(line, index, this.currentDate);
+        });
+        output += `${nextIndex - startIndex}行<br>`;
 
         return output;
     }

@@ -23,7 +23,8 @@ class LineHistory {
         else {
             this.historyData = [];
         }
-        this.dateIndices = this.calcDateIndices();
+        this._dateIndices = this.calcDateIndices();
+        this._dateArray = Object.keys(this.dateIndices);
         this.currentDate = undefined;
     }
     set currentDate(date) {
@@ -34,6 +35,10 @@ class LineHistory {
             ? new Date(this._currentDate)
             : undefined;
     }
+    get dateIndices() {
+        return this._dateIndices;
+    }
+    get dateArray() { return this._dateArray; }
     get exists() {
         return this.historyData != null
             && this.historyData != undefined
@@ -44,27 +49,19 @@ class LineHistory {
         // return this.seqSearchByDate(dateString);
     }
     hashSearchByDate(dateString) {
+        var _a;
         const dateInput = this.currentDate = generateDate(dateString);
+        const inputString = dateInput.toLocaleDateString();
         let output = "";
-        const startIndex = this.dateIndices[dateInput.toLocaleDateString()];
+        const startIndex = this.dateIndices[inputString];
         if (startIndex == undefined) {
             return "この日の履歴はありません。<br>";
         }
-        let countStop = -1;
-        for (let i = startIndex; i < this.historyData.length; i++) {
-            const line = this.historyData[i];
-            if (Patterns.DATE.test(line) && i != startIndex) {
-                countStop = i;
-                break;
-            }
-            const lineNum = i - startIndex;
-            output += createLineWithTime(line, lineNum, this.currentDate);
-            if (i >= this.historyData.length - 1) {
-                countStop = i;
-                break;
-            }
-        }
-        output += `${countStop - startIndex}行<br>`;
+        const nextIndex = (_a = this.dateIndices[this.dateArray[this.dateArray.indexOf(inputString) + 1]]) !== null && _a !== void 0 ? _a : this.historyData.length;
+        this.historyData.slice(startIndex, nextIndex).forEach((line, index) => {
+            output += createLineWithTime(line, index, this.currentDate);
+        });
+        output += `${nextIndex - startIndex}行<br>`;
         return output;
     }
     /**
