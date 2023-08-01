@@ -45,20 +45,20 @@ class LineHistory {
         const dateInput = generateDate(dateString);
         this._currentDate = dateInput;
         let output = "";
-        let startIndex = this.dateIndices[dateInput.toLocaleDateString()];
+        const startIndex = this.dateIndices[dateInput.toLocaleDateString()];
         if (startIndex == undefined) {
             output = "この日の履歴はありません。<br>";
             return output;
         }
         let countStop = -1;
         for (let i = startIndex; i < this.historyData.length; i++) {
-            let line = this.historyData[i];
+            const line = this.historyData[i];
             if (i != startIndex && Patterns.DATE.test(line)) {
                 countStop = i;
                 break;
             }
-            let lineInfo = line.split("\t");
-            let lineNum = i - startIndex;
+            const lineInfo = line.split("\t");
+            const lineNum = i - startIndex;
             if (lineInfo.length >= 2) {
                 lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this._currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
             }
@@ -146,7 +146,7 @@ class LineHistory {
                     if (line.length >= 60) {
                         line = `${line.substring(0, 60)}...`;
                     }
-                    let lineNum = i - countStart;
+                    const lineNum = i - countStart;
                     const year = date.getFullYear();
                     const month = zeroPadding(date.getMonth() + 1, 2);
                     const day = zeroPadding(date.getDate(), 2);
@@ -166,12 +166,12 @@ class LineHistory {
         return this.searchByDate(dateString);
     }
     calcDateIndices() {
-        let result = {};
+        const result = {};
         let current = new Date(1, 1, 1);
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (Patterns.DATE.test(line)) {
-                let dateTmp = generateDate(line.substring(0, 10));
+                const dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() >= current.getTime()) {
                     current = dateTmp;
                     result[dateTmp.toLocaleDateString()] = i;
@@ -208,14 +208,13 @@ function generateDate(dateString) {
     return result;
 }
 function getRandom(n, m) {
-    let num = Math.floor(Math.random() * (m + 1 - n)) + n;
-    return num;
+    return Math.floor(Math.random() * (m + 1 - n)) + n;
 }
 function addAsterisk(message) {
     let result = "";
-    let inputSplitted = message.split("<br>");
+    const inputSplitted = message.split("<br>");
     for (let i = 0; i < inputSplitted.length; i++) {
-        let line = inputSplitted[i];
+        const line = inputSplitted[i];
         result += `＊${line}<br>`;
     }
     return result;
@@ -228,13 +227,13 @@ function showLineInfoAlert(date, lineNumber) {
     alert(`この行の情報:\n${year}/${month}/${day}@${lineNumber}`);
 }
 function runCommand(command_, history) {
-    let command = command_.split(" ");
+    const command = command_.split(" ");
     if (command.length < 5) {
         for (let i = 0; i < 5 - command.length; i++) {
             command.push("");
         }
     }
-    let commandName = command[0];
+    const commandName = command[0];
     let output = "";
     if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)) {
         // output = history.searchByDate(commandName);
@@ -272,7 +271,7 @@ function zeroPadding(number, length) {
 function runSearchByDate(date, id) {
     var _a;
     const outputField = document.getElementById("outputField");
-    let result = runCommand(date, lineHistory);
+    const result = runCommand(date, lineHistory);
     writeResult(result, outputField);
     if (id) {
         (_a = document.getElementById(id)) === null || _a === void 0 ? void 0 : _a.scrollIntoView(true);
@@ -339,57 +338,6 @@ if (month == 1 && day == 1 && specialMessage) {
     specialMessage.style.display = "block";
 }
 //////////////////////////////////////////////////////
-wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", (e) => {
-    inputWord = e.target.value;
-});
-dateSubmitButton === null || dateSubmitButton === void 0 ? void 0 : dateSubmitButton.addEventListener("click", (e) => {
-    let result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"), lineHistory);
-    writeResult(result, outputField);
-});
-wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", (e) => {
-    let result = runCommand(`/search ${inputWord}`, lineHistory);
-    writeResult(result, outputField);
-});
-randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
-    let result = runCommand(`/random`, lineHistory);
-    writeResult(result, outputField);
-});
-previousDateButton === null || previousDateButton === void 0 ? void 0 : previousDateButton.addEventListener("click", (e) => {
-    let current = lineHistory.currentDate;
-    if (current != undefined) {
-        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
-        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        writeResult(result, outputField);
-    }
-});
-nextDateButton === null || nextDateButton === void 0 ? void 0 : nextDateButton.addEventListener("click", (e) => {
-    let current = lineHistory.currentDate;
-    if (current != undefined) {
-        let date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
-        let result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        writeResult(result, outputField);
-    }
-});
-currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.addEventListener("change", (e) => {
-    let result = runCommand(currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.value.replace(/-/g, "/"), lineHistory);
-    writeResult(result, outputField);
-});
-function writeResult(result, htmlElement) {
-    if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
-        htmlElement.innerHTML = addAsterisk(result);
-    }
-    if (currentDateField) {
-        let currentDate = lineHistory.currentDate;
-        if (currentDate != undefined) {
-            const month = zeroPadding(currentDate.getMonth() + 1, 2);
-            const date = zeroPadding(currentDate.getDate(), 2);
-            currentDateField.value = `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`;
-        }
-        else {
-            currentDateField.value = "";
-        }
-    }
-}
 let file;
 let text;
 fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener("change", (e) => {
@@ -405,3 +353,54 @@ fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener
         }
     };
 }, false);
+wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", (e) => {
+    inputWord = e.target.value;
+});
+dateSubmitButton === null || dateSubmitButton === void 0 ? void 0 : dateSubmitButton.addEventListener("click", (e) => {
+    const result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"), lineHistory);
+    writeResult(result, outputField);
+});
+wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", (e) => {
+    const result = runCommand(`/search ${inputWord}`, lineHistory);
+    writeResult(result, outputField);
+});
+randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
+    const result = runCommand(`/random`, lineHistory);
+    writeResult(result, outputField);
+});
+previousDateButton === null || previousDateButton === void 0 ? void 0 : previousDateButton.addEventListener("click", (e) => {
+    const current = lineHistory.currentDate;
+    if (current != undefined) {
+        const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+        const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+        writeResult(result, outputField);
+    }
+});
+nextDateButton === null || nextDateButton === void 0 ? void 0 : nextDateButton.addEventListener("click", (e) => {
+    const current = lineHistory.currentDate;
+    if (current != undefined) {
+        const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+        const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+        writeResult(result, outputField);
+    }
+});
+currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.addEventListener("change", (e) => {
+    const result = runCommand(currentDateField === null || currentDateField === void 0 ? void 0 : currentDateField.value.replace(/-/g, "/"), lineHistory);
+    writeResult(result, outputField);
+});
+function writeResult(result, htmlElement) {
+    if ((htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.innerHTML) && result != "") {
+        htmlElement.innerHTML = addAsterisk(result);
+    }
+    if (currentDateField) {
+        const currentDate = lineHistory.currentDate;
+        if (currentDate != undefined) {
+            const month = zeroPadding(currentDate.getMonth() + 1, 2);
+            const date = zeroPadding(currentDate.getDate(), 2);
+            currentDateField.value = `${currentDate === null || currentDate === void 0 ? void 0 : currentDate.getFullYear()}-${month}-${date}`;
+        }
+        else {
+            currentDateField.value = "";
+        }
+    }
+}
