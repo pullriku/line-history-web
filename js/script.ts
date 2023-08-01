@@ -186,7 +186,7 @@ class LineHistory {
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
 
-    public searchByRandom(tries: number = 1000): string {
+    public searchByRandom(): string {
         const dates = Object.keys(this.dateIndices);
         const randomDate = dates[Math.floor(Math.random() * dates.length)];
 

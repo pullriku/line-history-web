@@ -159,7 +159,7 @@ class LineHistory {
         this._currentDate = undefined;
         return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
     }
-    searchByRandom(tries = 1000) {
+    searchByRandom() {
         const dates = Object.keys(this.dateIndices);
         const randomDate = dates[Math.floor(Math.random() * dates.length)];
         const dateString = generateDate(randomDate).toLocaleDateString();
