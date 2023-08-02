@@ -3,17 +3,11 @@
  * aa
  */
 
-/**
- * @classdesc 日付のパターンを保持するクラス
- */
-class Patterns {
-    private constructor() { }
+const RE_DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
+const RE_YEAR = /^20\d{2}/g;
+const RE_MONTH_DAY = /\d{2}/g;
+const RE_DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 
-    static readonly DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
-    static readonly YEAR = /^20\d{2}/g;
-    static readonly MONTH_DAY = /\d{2}/g;
-    static readonly DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
-}
 
 /**
  * @classdesc 履歴ファイルを保持するクラス
@@ -104,7 +98,7 @@ class LineHistory {
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
 
-            if (Patterns.DATE.test(line)) {
+            if (RE_DATE.test(line)) {
                 const dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() >= max_date.getTime()) {
                     date = generateDate(line.substring(0, 10));
@@ -149,7 +143,7 @@ class LineHistory {
         let current: Date = new Date(1, 1, 1);
 
         this.historyData.forEach((line, index) => {
-            if (Patterns.DATE.test(line)) {
+            if (RE_DATE.test(line)) {
                 const dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() >= current.getTime()) {
                     current = dateTmp;
@@ -223,6 +217,10 @@ function showLineInfoAlert(date: string, lineNumber: number): void {
 }
 
 function runCommand(command_: string, history: LineHistory): string {
+    if (history == undefined || history.exists == false) {
+        return "⚠️履歴ファイルを選択してください。"
+    }
+    
     const command: string[] = command_.split(" ");
     if (command.length < 5) {
         for (let i = 0; i < 5 - command.length; i++) {
@@ -234,7 +232,6 @@ function runCommand(command_: string, history: LineHistory): string {
     let output: string = ""
 
     if (/^20\d{2}\/\d{1,2}\/\d{1,2}$/.test(commandName)) {
-        // output = history.searchByDate(commandName);
         output = history.searchByDate(commandName);
     } else if (commandName == "/help") {
 
@@ -244,10 +241,6 @@ function runCommand(command_: string, history: LineHistory): string {
         output = history.searchByKeyword(command[1]);
     } else {
         output = makeErrorMessage("command_error");
-    }
-
-    if (history.exists == false) {
-        output = "⚠️履歴ファイルを選択してください。"
     }
     return output;
 }
@@ -267,7 +260,7 @@ function zeroPadding(number: number | String, length: number): string {
 }
 
 function runSearchByDate(date: string, id?: string): void {
-    const outputField = document.getElementById("outputField");
+    const outputField = document.getElementById("outputField") as HTMLElement;
     const result = runCommand(date, lineHistory);
     writeResult(result, outputField);
 
@@ -276,150 +269,14 @@ function runSearchByDate(date: string, id?: string): void {
     }
 }
 
-
-const title = document.getElementById("title");
-const fileField = document.getElementById("file");
-const dateInput = document.getElementById("dateTimeInput");
-// const dateSubmitButton = document.getElementById("dateSubmitButton");
 const wordInputField = document.getElementById("wordInput");
-let inputWord = "";
 const wordSubmitButton = document.getElementById("wordSubmitButton");
-const randomSubmitButton = document.getElementById("randomSubmitButton");
-const outputField = document.getElementById("outputField");
+const outputField = document.getElementById("outputField") as HTMLElement;
 const specialMessage = document.getElementById("specialMessage");
-const nextDateButton = document.getElementById("nextDateButton");
-const previousDateButton = document.getElementById("previousDateButton");
 const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
+let lineHistory: LineHistory;
 
-let lineHistory = new LineHistory();
-
-const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-let isLightMode = !mediaQuery.matches;
-
-if (outputField?.innerHTML) {
-    outputField.innerHTML = `
-        <br>
-        Welcome back<br>
-        <br>
-        `
-}
-
-const today = new Date();
-const year = today.getFullYear();
-const month = today.getMonth() + 1;
-const day = today.getDate();
-const yearDiff = year - 2022;
-
-const monthString = zeroPadding(month, 2);
-const dayString = zeroPadding(day, 2);
-currentDateField.value = `${year}-${monthString}-${dayString}`;
-
-
-// 特別な表示の処理 ///////////////////////////
-
-// n周年記念日の表示
-// 毎年2/10から2/16に表示
-// const today = new Date(2023,2-1,13);
-
-if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
-    let ordinal: string; // 序数詞
-    const onesPlace = yearDiff % 10;
-    switch (onesPlace) {
-        case 1:
-            ordinal = "st";
-            break;
-        case 2:
-            ordinal = "nd";
-            break;
-        case 3:
-            ordinal = "rd";
-            break;
-        default:
-            ordinal = "th";
-            break;
-    }
-    specialMessage.innerHTML = `🎉${yearDiff}${ordinal} Anniv!`;
-    specialMessage.style.display = "block"
-
-}
-
-// 新年の表示
-if (month == 1 && day == 1 && specialMessage) {
-    specialMessage.innerHTML = `HappyNewYear!`;
-    specialMessage.style.display = "block"
-}
-
-//////////////////////////////////////////////////////
-
-let file: FileList;
-let text: string | ArrayBuffer;
-
-fileField?.addEventListener("change", (e) => {
-    file = (e.target as HTMLInputElement)?.files ?? new FileList();
-    let reader = new FileReader();
-    reader.readAsText(file[0]);
-
-    reader.onload = (e) => {
-        text = reader.result ?? "";
-        if (typeof text == "string") {
-            lineHistory = new LineHistory(text)
-        }
-
-    }
-}, false);
-
-
-
-wordInputField?.addEventListener("keyup", (e) => {
-    inputWord = (e.target as HTMLInputElement).value;
-});
-
-// dateSubmitButton?.addEventListener("click", (e) => {
-//     const result = runCommand((dateInput as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
-//     writeResult(result, outputField);
-// });
-
-wordSubmitButton?.addEventListener("click", () => {
-    const result = runCommand(`/search ${inputWord}`, lineHistory);
-    writeResult(result, outputField);
-});
-
-wordInputField?.addEventListener("keyup", (e) => {
-    if (e.key == "Enter")
-        wordSubmitButton?.dispatchEvent(new Event("click"));
-});
-
-randomSubmitButton?.addEventListener("click", (e) => {
-    const result = runCommand(`/random`, lineHistory);
-    writeResult(result, outputField);
-});
-
-previousDateButton?.addEventListener("click", (e) => {
-    const current = lineHistory.currentDate
-    
-    if(current != undefined){
-        const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
-        const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        writeResult(result, outputField);
-    }
-});
-
-nextDateButton?.addEventListener("click", (e) => {
-    const current = lineHistory.currentDate
-
-    if(current != undefined){
-        const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
-        const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
-        writeResult(result, outputField);
-    }
-});
-
-currentDateField?.addEventListener("change", (e) => {
-    const result = runCommand((currentDateField as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
-    writeResult(result, outputField);
-});
-
-function writeResult(result: string, htmlElement?: HTMLElement | null): void {
+function writeResult(result: string, htmlElement: HTMLElement): void {
     if (htmlElement?.innerHTML && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
@@ -435,3 +292,128 @@ function writeResult(result: string, htmlElement?: HTMLElement | null): void {
         }
     }
 }
+
+function initOutputField() {
+    if (outputField?.innerHTML) {
+        outputField.innerHTML = `
+            <br>
+            Welcome back<br>
+            <br>
+            `
+    }
+}
+
+function initCurrentDateField() {
+    const today = new Date();
+    const monthString = zeroPadding(today.getMonth()+1, 2);
+    const dayString = zeroPadding(today.getDate(), 2);
+    currentDateField.value = `${today.getFullYear()}-${monthString}-${dayString}`;
+}
+
+/**
+ * @description 特別なメッセージを表示する
+ */
+function drawSpecialMessageIfNeeded() {
+    // n周年記念日の表示
+    // 毎年2/10から2/16に表示
+    // const today = new Date(2023,2-1,13);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const yearDiff = year - 2022;
+
+    if (month == 2 && 10 <= day && day <= 16 && specialMessage) {
+        let ordinal: string; // 序数詞
+        const onesPlace = yearDiff % 10;
+        switch (onesPlace) {
+            case 1:
+                ordinal = "st";
+                break;
+            case 2:
+                ordinal = "nd";
+                break;
+            case 3:
+                ordinal = "rd";
+                break;
+            default:
+                ordinal = "th";
+                break;
+        }
+        specialMessage.innerHTML = `🎉${yearDiff}${ordinal} Anniv!`;
+        specialMessage.style.display = "block"
+    
+    }
+    
+    // 新年の表示
+    if (month == 1 && day == 1 && specialMessage) {
+        specialMessage.innerHTML = `HappyNewYear!`;
+        specialMessage.style.display = "block"
+    }
+}
+
+function initEventListeners() {
+    const fileField = document.getElementById("file");
+    fileField?.addEventListener("change", (e) => {
+        let file = (e.target as HTMLInputElement)?.files ?? new FileList();
+        let reader = new FileReader();
+        reader.readAsText(file[0]);
+    
+        reader.onload = (e) => {
+            let text = reader.result ?? "";
+            if (typeof text == "string") {
+                lineHistory = new LineHistory(text)
+            }
+    
+        }
+    }, false);
+    
+    wordSubmitButton?.addEventListener("click", () => {
+        const inputWord = (wordInputField as HTMLInputElement)?.value;
+        const result = runCommand(`/search ${inputWord}`, lineHistory);
+        writeResult(result, outputField);
+    });
+    
+    wordInputField?.addEventListener("keyup", (e) => {
+        if (e.key == "Enter")
+            wordSubmitButton?.dispatchEvent(new Event("click"));
+    });
+    
+    const randomSubmitButton = document.getElementById("randomSubmitButton");
+    randomSubmitButton?.addEventListener("click", (e) => {
+        const result = runCommand(`/random`, lineHistory);
+        writeResult(result, outputField);
+    });
+    
+    const previousDateButton = document.getElementById("previousDateButton");
+    previousDateButton?.addEventListener("click", (e) => {
+        const current = lineHistory.currentDate
+        
+        if(current != undefined){
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+            const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+            writeResult(result, outputField);
+        }
+    });
+    
+    const nextDateButton = document.getElementById("nextDateButton");
+    nextDateButton?.addEventListener("click", (e) => {
+        const current = lineHistory.currentDate
+    
+        if(current != undefined){
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+            const result = runCommand(date.toLocaleString().split(' ')[0], lineHistory);
+            writeResult(result, outputField);
+        }
+    });
+    
+    currentDateField?.addEventListener("change", (e) => {
+        const result = runCommand((currentDateField as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
+        writeResult(result, outputField);
+    });
+}
+
+drawSpecialMessageIfNeeded();
+initCurrentDateField();
+initEventListeners();
+initOutputField();
