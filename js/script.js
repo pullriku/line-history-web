@@ -18,7 +18,11 @@ Patterns.DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
 class LineHistory {
     constructor(data) {
         if (data != null) {
-            this.historyData = data.replace(/\r/g, "").split("\n");
+            this.historyData = data
+                .replace(/\r/g, "")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .split("\n");
         }
         else {
             this.historyData = [];
@@ -44,72 +48,25 @@ class LineHistory {
             && this.historyData != undefined
             && this.historyData.length != 0;
     }
-    searchByDate(dateString) {
-        return this.hashSearchByDate(dateString);
-        // return this.seqSearchByDate(dateString);
-    }
-    hashSearchByDate(dateString) {
-        var _a;
-        const dateInput = this.currentDate = generateDate(dateString);
-        const inputString = dateInput.toLocaleDateString();
-        let output = "";
-        const startIndex = this.dateIndices[inputString];
-        if (startIndex == undefined) {
-            return "この日の履歴はありません。<br>";
-        }
-        const nextIndex = (_a = this.dateIndices[this.dateArray[this.dateArray.indexOf(inputString) + 1]]) !== null && _a !== void 0 ? _a : this.historyData.length;
-        this.historyData.slice(startIndex, nextIndex).forEach((line, index) => {
-            output += createLineWithTime(line, index, this.currentDate);
-        });
-        output += `${nextIndex - startIndex}行<br>`;
-        return output;
-    }
     /**
      * 指定した日付の履歴を検索する
      * @param dateString 日付を表す文字列 yyyy/mm/dd
      * @returns 指定した日の履歴
      */
-    seqSearchByDate(dateString) {
+    searchByDate(dateString) {
         var _a;
-        const dateInput = generateDate(dateString);
-        let countStart = -1;
-        let countStop = -1;
-        let countFlag = false;
+        const dateInput = this.currentDate = generateDate(dateString);
+        const localeString = dateInput.toLocaleDateString();
         let output = "";
-        for (let i = 0; i < this.historyData.length; i++) {
-            let line = this.historyData[i];
-            if (Patterns.DATE.test(line)) {
-                let dateTmp = generateDate(line.substring(0, 10));
-                if (dateTmp.getTime() == dateInput.getTime()) {
-                    countStart = i;
-                    countFlag = true;
-                    output += `${line}<br>`;
-                    this.currentDate = dateTmp;
-                }
-                else if (countFlag && dateInput.getTime() < dateTmp.getTime()) {
-                    countStop = i;
-                    break;
-                }
-            }
-            else if (countFlag) {
-                let lineInfo = line.split("\t");
-                let lineNum = i - countStart;
-                if (lineInfo.length >= 2) {
-                    lineInfo[0] = `<a href="javascript:showLineInfoAlert('${(_a = this.currentDate) === null || _a === void 0 ? void 0 : _a.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
-                }
-                output += `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
-                if (i == this.historyData.length - 1) {
-                    countStop = i;
-                    break;
-                }
-            }
+        const startIndex = this.dateIndices[localeString];
+        if (startIndex == undefined) {
+            return "この日の履歴はありません。<br>";
         }
-        if (countStart == -1) {
-            output = "この日の履歴はありません。<br>";
-        }
-        else {
-            output += `${countStop - countStart}行<br>`;
-        }
+        const nextIndex = (_a = this.dateIndices[this.dateArray[this.dateArray.indexOf(localeString) + 1]]) !== null && _a !== void 0 ? _a : this.historyData.length;
+        this.historyData.slice(startIndex, nextIndex).forEach((line, index) => {
+            output += createLineWithTime(line, index, this.currentDate);
+        });
+        output += `${nextIndex - startIndex}行<br>`;
         return output;
     }
     searchByKeyword(keyword) {
@@ -124,28 +81,27 @@ class LineHistory {
         for (let i = 0; i < this.historyData.length; i++) {
             let line = this.historyData[i];
             if (Patterns.DATE.test(line)) {
-                if (generateDate(line.substring(0, 10)).getTime() >= max_date.getTime()) {
+                const dateTmp = generateDate(line.substring(0, 10));
+                if (dateTmp.getTime() >= max_date.getTime()) {
                     date = generateDate(line.substring(0, 10));
                     max_date = date;
                     countStart = i;
                 }
             }
-            else {
-                if (line.search(keyword) != -1) {
-                    counter++;
-                    if (/\d{2}:\d{2}.*/.test(line)) {
-                        line = line.substring(6);
-                    }
-                    if (line.length >= 60) {
-                        line = `${line.substring(0, 60)}...`;
-                    }
-                    const lineNum = i - countStart;
-                    const year = date.getFullYear();
-                    const month = zeroPadding(date.getMonth() + 1, 2);
-                    const day = zeroPadding(date.getDate(), 2);
-                    const dateString = `${year}/${month}/${day}`;
-                    output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line}<br>`;
+            else if (line.search(keyword) != -1) {
+                counter++;
+                if (/\d{2}:\d{2}.*/.test(line)) {
+                    line = line.substring(6);
                 }
+                if (line.length >= 60) {
+                    line = `${line.substring(0, 60)}...`;
+                }
+                const lineNum = i - countStart;
+                const year = date.getFullYear();
+                const month = zeroPadding(date.getMonth() + 1, 2);
+                const day = zeroPadding(date.getDate(), 2);
+                const dateString = `${year}/${month}/${day}`;
+                output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line} <br>`;
             }
         }
         output = output == "" ? "見つかりませんでした。" : output;
@@ -161,16 +117,15 @@ class LineHistory {
     calcDateIndices() {
         const result = {};
         let current = new Date(1, 1, 1);
-        for (let i = 0; i < this.historyData.length; i++) {
-            let line = this.historyData[i];
+        this.historyData.forEach((line, index) => {
             if (Patterns.DATE.test(line)) {
                 const dateTmp = generateDate(line.substring(0, 10));
                 if (dateTmp.getTime() >= current.getTime()) {
                     current = dateTmp;
-                    result[dateTmp.toLocaleDateString()] = i;
+                    result[dateTmp.toLocaleDateString()] = index;
                 }
             }
-        }
+        });
         return result;
     }
 }
@@ -186,11 +141,9 @@ function createLineWithTime(line, lineNum, currentDate) {
     return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
 }
 function checkDate(year = 1970, month = 1, day = 1) {
-    return year > 0
-        && 0 < month
-        && month < 13
-        && 0 < day
-        && day < 32;
+    return year >= 1970
+        && 1 <= month && month <= 12
+        && 1 <= day && day <= 31;
 }
 function generateDate(dateString) {
     const splitDate = dateString.split("/");
@@ -216,11 +169,9 @@ function getRandom(n, m) {
 }
 function addAsterisk(message) {
     let result = "";
-    const inputSplitted = message.split("<br>");
-    for (let i = 0; i < inputSplitted.length; i++) {
-        const line = inputSplitted[i];
+    message.split("<br>").forEach((line) => {
         result += `＊${line}<br>`;
-    }
+    });
     return result;
 }
 function showLineInfoAlert(date, lineNumber) {
@@ -277,14 +228,14 @@ function runSearchByDate(date, id) {
     const outputField = document.getElementById("outputField");
     const result = runCommand(date, lineHistory);
     writeResult(result, outputField);
-    if (id) {
+    if (id != undefined) {
         (_a = document.getElementById(id)) === null || _a === void 0 ? void 0 : _a.scrollIntoView(true);
     }
 }
 const title = document.getElementById("title");
 const fileField = document.getElementById("file");
 const dateInput = document.getElementById("dateTimeInput");
-const dateSubmitButton = document.getElementById("dateSubmitButton");
+// const dateSubmitButton = document.getElementById("dateSubmitButton");
 const wordInputField = document.getElementById("wordInput");
 let inputWord = "";
 const wordSubmitButton = document.getElementById("wordSubmitButton");
@@ -360,13 +311,17 @@ fileField === null || fileField === void 0 ? void 0 : fileField.addEventListener
 wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", (e) => {
     inputWord = e.target.value;
 });
-dateSubmitButton === null || dateSubmitButton === void 0 ? void 0 : dateSubmitButton.addEventListener("click", (e) => {
-    const result = runCommand(dateInput === null || dateInput === void 0 ? void 0 : dateInput.value.replace(/-/g, "/"), lineHistory);
-    writeResult(result, outputField);
-});
-wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", (e) => {
+// dateSubmitButton?.addEventListener("click", (e) => {
+//     const result = runCommand((dateInput as HTMLInputElement)?.value.replace(/-/g, "/"), lineHistory);
+//     writeResult(result, outputField);
+// });
+wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.addEventListener("click", () => {
     const result = runCommand(`/search ${inputWord}`, lineHistory);
     writeResult(result, outputField);
+});
+wordInputField === null || wordInputField === void 0 ? void 0 : wordInputField.addEventListener("keyup", (e) => {
+    if (e.key == "Enter")
+        wordSubmitButton === null || wordSubmitButton === void 0 ? void 0 : wordSubmitButton.dispatchEvent(new Event("click"));
 });
 randomSubmitButton === null || randomSubmitButton === void 0 ? void 0 : randomSubmitButton.addEventListener("click", (e) => {
     const result = runCommand(`/random`, lineHistory);
