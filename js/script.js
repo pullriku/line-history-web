@@ -6,6 +6,7 @@ import * as utl from "./utils.js";
 import * as his from "./history.js";
 const outputField = document.getElementById("outputField");
 const currentDateField = document.getElementById("currentDateField");
+// let lineHistory: his.LineHistory;
 let lineHistory;
 main();
 function main() {
@@ -24,7 +25,8 @@ function initEventListeners() {
         reader.onload = (e) => {
             const text = reader.result ?? "";
             if (typeof text == "string") {
-                lineHistory = new his.LineHistory(text);
+                // lineHistory = new his.LineHistory(text)
+                lineHistory = his.newLineHistory(text);
             }
         };
     }, false);
@@ -33,7 +35,8 @@ function initEventListeners() {
     wordSubmitButton?.addEventListener("click", () => {
         const inputWord = wordInputField?.value;
         drawErrorMessageIfNeeded();
-        const result = lineHistory.searchByKeyword(inputWord);
+        // const result = lineHistory.searchByKeyword(inputWord);
+        const result = his.searchByKeyword(lineHistory, inputWord);
         writeResult(result, outputField);
     });
     wordInputField?.addEventListener("keyup", (e) => {
@@ -43,32 +46,38 @@ function initEventListeners() {
     const randomSubmitButton = document.getElementById("randomSubmitButton");
     randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
-        const result = lineHistory.searchByRandom();
+        // const result = lineHistory.searchByRandom();
+        const result = his.searchByRandom(lineHistory);
         writeResult(result, outputField);
     });
     const previousDateButton = document.getElementById("previousDateButton");
     previousDateButton?.addEventListener("click", () => {
-        const current = lineHistory.currentDate;
+        // const current = lineHistory.currentDate
+        const current = his.currentDate;
         if (current != undefined) {
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
             drawErrorMessageIfNeeded();
-            const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
+            // const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
     });
     const nextDateButton = document.getElementById("nextDateButton");
     nextDateButton?.addEventListener("click", () => {
-        const current = lineHistory.currentDate;
+        // const current = lineHistory.currentDate
+        const current = his.currentDate;
         if (current != undefined) {
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
             drawErrorMessageIfNeeded();
-            const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
+            // const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
     });
     currentDateField?.addEventListener("change", () => {
         drawErrorMessageIfNeeded();
-        const result = lineHistory.searchByDate(currentDateField?.value.replace(/-/g, "/"));
+        // const result = lineHistory.searchByDate(currentDateField?.value.replace(/-/g, "/"));
+        const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
         writeResult(result, outputField);
     });
 }
@@ -76,7 +85,8 @@ function initGlobalFunctions() {
     window.runSearchByDate = (date, id) => {
         const outputField = document.getElementById("outputField");
         drawErrorMessageIfNeeded();
-        const result = lineHistory.searchByDate(date);
+        // const result = lineHistory.searchByDate(date);
+        const result = his.searchByDate(lineHistory, date);
         writeResult(result, outputField);
         if (id != undefined) {
             document.getElementById(id)?.scrollIntoView(true);
@@ -145,7 +155,10 @@ function initSpecialMessageIfNeeded() {
     }
 }
 function drawErrorMessageIfNeeded() {
-    if (lineHistory == undefined || lineHistory.exists == false) {
+    // if (lineHistory == undefined || lineHistory.exists == false) {
+    //     outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
+    // }
+    if (lineHistory == undefined || his.lineHistoryExists(lineHistory) == false) {
         outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
     }
 }
@@ -161,7 +174,8 @@ function writeResult(result, htmlElement) {
         htmlElement.innerHTML = addAsterisk(result);
     }
     if (currentDateField) {
-        const currentDate = lineHistory.currentDate;
+        // const currentDate = lineHistory.currentDate;
+        const currentDate = his.currentDate;
         if (currentDate != undefined) {
             const month = utl.zeroPadding(currentDate.getMonth() + 1, 2);
             const date = utl.zeroPadding(currentDate.getDate(), 2);
