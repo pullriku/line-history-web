@@ -24,12 +24,12 @@ function main() {
 function initEventListeners() {
     const fileField = document.getElementById("file");
     fileField?.addEventListener("change", (e) => {
-        let file = (e.target as HTMLInputElement)?.files ?? new FileList();
-        let reader = new FileReader();
+        const file = (e.target as HTMLInputElement)?.files ?? new FileList();
+        const reader = new FileReader();
         reader.readAsText(file[0]);
     
         reader.onload = (e) => {
-            let text = reader.result ?? "";
+            const text = reader.result ?? "";
             if (typeof text == "string") {
                 lineHistory = new his.LineHistory(text)
             }
