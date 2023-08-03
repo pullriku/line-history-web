@@ -9,7 +9,6 @@ import * as his from "./history.js";
 
 const outputField = document.getElementById("outputField") as HTMLElement;
 const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
-// let lineHistory: his.LineHistory;
 let lineHistory: his.LineHistory;
 main();
 
@@ -32,7 +31,6 @@ function initEventListeners() {
         reader.onload = (e) => {
             const text = reader.result ?? "";
             if (typeof text == "string") {
-                // lineHistory = new his.LineHistory(text)
                 lineHistory = his.newLineHistory(text);
             }
     
@@ -44,7 +42,6 @@ function initEventListeners() {
     wordSubmitButton?.addEventListener("click", () => {
         const inputWord = (wordInputField as HTMLInputElement)?.value;
         drawErrorMessageIfNeeded();
-        // const result = lineHistory.searchByKeyword(inputWord);
         const result = his.searchByKeyword(lineHistory, inputWord);
         writeResult(result, outputField);
     });
@@ -57,20 +54,17 @@ function initEventListeners() {
     const randomSubmitButton = document.getElementById("randomSubmitButton");
     randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
-        // const result = lineHistory.searchByRandom();
         const result = his.searchByRandom(lineHistory);
         writeResult(result, outputField);
     });
     
     const previousDateButton = document.getElementById("previousDateButton");
     previousDateButton?.addEventListener("click", () => {
-        // const current = lineHistory.currentDate
         const current = his.currentDate;
         
         if(current != undefined){
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
             drawErrorMessageIfNeeded();
-            // const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
             const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
@@ -78,13 +72,11 @@ function initEventListeners() {
     
     const nextDateButton = document.getElementById("nextDateButton");
     nextDateButton?.addEventListener("click", () => {
-        // const current = lineHistory.currentDate
         const current = his.currentDate;
     
         if(current != undefined){
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
             drawErrorMessageIfNeeded();
-            // const result = lineHistory.searchByDate(date.toLocaleString().split(' ')[0]);
             const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
@@ -92,7 +84,6 @@ function initEventListeners() {
     
     currentDateField?.addEventListener("change", () => {
         drawErrorMessageIfNeeded();
-        // const result = lineHistory.searchByDate(currentDateField?.value.replace(/-/g, "/"));
         const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
         writeResult(result, outputField);
     });
@@ -109,7 +100,6 @@ function initGlobalFunctions() {
     window.runSearchByDate = (date: string, id?: string): void => {
         const outputField = document.getElementById("outputField") as HTMLElement;
         drawErrorMessageIfNeeded();
-        // const result = lineHistory.searchByDate(date);
         const result = his.searchByDate(lineHistory, date);
         writeResult(result, outputField);
     
@@ -191,9 +181,6 @@ function initSpecialMessageIfNeeded() {
 
 
 function drawErrorMessageIfNeeded() {
-    // if (lineHistory == undefined || lineHistory.exists == false) {
-    //     outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
-    // }
     if (lineHistory == undefined || his.lineHistoryExists(lineHistory) == false) {
         outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
     }
@@ -213,7 +200,6 @@ function writeResult(result: string, htmlElement: HTMLElement): void {
     }
     
     if(currentDateField){
-        // const currentDate = lineHistory.currentDate;
         const currentDate = his.currentDate;
         if(currentDate != undefined){
             const month = utl.zeroPadding(currentDate.getMonth() + 1, 2);
