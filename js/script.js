@@ -146,7 +146,7 @@ function initSpecialMessageIfNeeded() {
 }
 function drawErrorMessageIfNeeded() {
     if (lineHistory == undefined || lineHistory.exists == false) {
-        return "⚠️履歴ファイルを選択してください。";
+        outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
     }
 }
 function writeResult(result, htmlElement) {
