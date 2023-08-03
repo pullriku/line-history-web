@@ -41,13 +41,13 @@ function initEventListeners() {
             wordSubmitButton?.dispatchEvent(new Event("click"));
     });
     const randomSubmitButton = document.getElementById("randomSubmitButton");
-    randomSubmitButton?.addEventListener("click", (e) => {
+    randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
         const result = lineHistory.searchByRandom();
         writeResult(result, outputField);
     });
     const previousDateButton = document.getElementById("previousDateButton");
-    previousDateButton?.addEventListener("click", (e) => {
+    previousDateButton?.addEventListener("click", () => {
         const current = lineHistory.currentDate;
         if (current != undefined) {
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
@@ -57,7 +57,7 @@ function initEventListeners() {
         }
     });
     const nextDateButton = document.getElementById("nextDateButton");
-    nextDateButton?.addEventListener("click", (e) => {
+    nextDateButton?.addEventListener("click", () => {
         const current = lineHistory.currentDate;
         if (current != undefined) {
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
@@ -66,7 +66,7 @@ function initEventListeners() {
             writeResult(result, outputField);
         }
     });
-    currentDateField?.addEventListener("change", (e) => {
+    currentDateField?.addEventListener("change", () => {
         drawErrorMessageIfNeeded();
         const result = lineHistory.searchByDate(currentDateField?.value.replace(/-/g, "/"));
         writeResult(result, outputField);

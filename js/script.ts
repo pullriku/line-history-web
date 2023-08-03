@@ -52,14 +52,14 @@ function initEventListeners() {
     });
     
     const randomSubmitButton = document.getElementById("randomSubmitButton");
-    randomSubmitButton?.addEventListener("click", (e) => {
+    randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
         const result = lineHistory.searchByRandom();
         writeResult(result, outputField);
     });
     
     const previousDateButton = document.getElementById("previousDateButton");
-    previousDateButton?.addEventListener("click", (e) => {
+    previousDateButton?.addEventListener("click", () => {
         const current = lineHistory.currentDate
         
         if(current != undefined){
@@ -71,7 +71,7 @@ function initEventListeners() {
     });
     
     const nextDateButton = document.getElementById("nextDateButton");
-    nextDateButton?.addEventListener("click", (e) => {
+    nextDateButton?.addEventListener("click", () => {
         const current = lineHistory.currentDate
     
         if(current != undefined){
@@ -82,7 +82,7 @@ function initEventListeners() {
         }
     });
     
-    currentDateField?.addEventListener("change", (e) => {
+    currentDateField?.addEventListener("change", () => {
         drawErrorMessageIfNeeded();
         const result = lineHistory.searchByDate(currentDateField?.value.replace(/-/g, "/"));
         writeResult(result, outputField);
