@@ -99,12 +99,9 @@ function calcDateIndices(lines) {
 function createLineWithTime(line, lineNum, currentDate) {
     const lineInfo = line.split("\t");
     if (lineInfo.length >= 2) {
-        lineInfo[0] = `
-            <a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">
-                ${lineInfo[0]}
-            </a>
-        `;
+        lineInfo[0] = `<a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
     }
+    console.log(`[${lineInfo.join("\t")}]`);
     return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
 }
 function checkDate(year = 1970, month = 1, day = 1) {

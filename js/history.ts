@@ -129,12 +129,10 @@ function calcDateIndices(lines: string[]): {[date: string]: number} {
 function createLineWithTime(line: string, lineNum: number, currentDate?: Date): string {
     const lineInfo = line.split("\t");
     if(lineInfo.length >= 2) {
-        lineInfo[0] = `
-            <a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">
-                ${lineInfo[0]}
-            </a>
-        `;
+        lineInfo[0] = `<a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
     }
+    console.log(`[${lineInfo.join("\t")}]`);
+    
     return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
 }
 
