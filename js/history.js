@@ -46,6 +46,7 @@ export function searchByKeyword(lineHistory, keyword) {
     if (keyword.length == 1) {
         output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
     }
+    keyword = keyword.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     for (let i = 0; i < lineHistory.historyData.length; i++) {
         let line = lineHistory.historyData[i];
         if (RE_DATE.test(line)) {
