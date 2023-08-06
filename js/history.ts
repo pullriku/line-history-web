@@ -38,32 +38,33 @@ export function lineHistoryExists(history: LineHistory): boolean {
 export function searchByDate(lineHistory: LineHistory, dateString: string): string {
     const dateInput = currentDate = generateDate(dateString);
     const localeString = dateInput.toLocaleDateString();
-    let output: string = "";
+    let result: string = "";
 
-    const startIndex = lineHistory.dateIndices[localeString];
-    if (startIndex == undefined) {
+    const startLineNum = lineHistory.dateIndices[localeString];
+    if (startLineNum == undefined) {
         return "この日の履歴はありません。<br>";
     }
 
-    const nextIndex = lineHistory.dateIndices[lineHistory.dateArray[lineHistory.dateArray.indexOf(localeString) + 1]] ?? lineHistory.historyData.length;
+    const nextIndex = lineHistory.dateArray[lineHistory.dateArray.indexOf(localeString) + 1];
+    const nextLineNum = lineHistory.dateIndices[nextIndex] ?? lineHistory.historyData.length;
 
-    lineHistory.historyData.slice(startIndex, nextIndex).forEach((line, index) => {
-        output += createLineWithTime(line, index, currentDate);
+    lineHistory.historyData.slice(startLineNum, nextLineNum).forEach((line, index) => {
+        result += createLineWithTime(line, index, currentDate);
     });
-    output += `${nextIndex - startIndex}行<br>`;
+    result += `${nextLineNum - startLineNum}行<br>`;
 
-    return output;
+    return result;
 }
 
 export function searchByKeyword(lineHistory: LineHistory, keyword: string): string {
     let counter = 0;
-    let output = "";
+    let result = "";
     let date: Date = new Date(1, 1, 1);
     let max_date = new Date(1970, 1, 1);
     let countStart: number = -1;
 
     if (keyword.length == 1) {
-        output += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
+        result += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
     }
 
     keyword = keyword.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -88,19 +89,19 @@ export function searchByKeyword(lineHistory: LineHistory, keyword: string): stri
             }
 
 
-            const lineNum = i-countStart;
+            const lineCount = i-countStart;
             const year = date.getFullYear();
             const month = utl.zeroPadding(date.getMonth() + 1, 2);
             const day = utl.zeroPadding(date.getDate(), 2);
             const dateString = `${year}/${month}/${day}`;
-            output += `<a href="javascript:runSearchByDate('${dateString}', '${lineNum}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineNum}</spam></a> ${line} <br>`;
+            result += `<a href="javascript:runSearchByDate('${dateString}', '${lineCount}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineCount}</spam></a> ${line} <br>`;
         }
     }
     
-    output = output == "" ? "見つかりませんでした。" : output;
+    result = result == "" ? "見つかりませんでした。" : result;
 
     currentDate = undefined;
-    return `<h3 style="display:inline">${counter}件</h3><br><br>${output}`;
+    return `<h3 style="display:inline">${counter}件</h3><br><br>${result}`;
 }
 
 export function searchByRandom(lineHistory: LineHistory): string {
@@ -128,14 +129,14 @@ function calcDateIndices(lines: string[]): {[date: string]: number} {
     return result;
 }
 
-function createLineWithTime(line: string, lineNum: number, currentDate?: Date): string {
+function createLineWithTime(line: string, lineCount: number, currentDate?: Date): string {
     const lineInfo = line.split("\t");
     if(lineInfo.length >= 2) {
-        lineInfo[0] = `<a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineNum});">${lineInfo[0]}</a>`;
+        lineInfo[0] = `<a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineCount});">${lineInfo[0]}</a>`;
     }
     console.log(`[${lineInfo.join("\t")}]`);
     
-    return `<span id="${lineNum}">${lineInfo.join("\t")}</span><br>`;
+    return `<span id="${lineCount}">${lineInfo.join("\t")}</span><br>`;
 }
 
 function checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {
