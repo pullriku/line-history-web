@@ -39,23 +39,21 @@ export function searchByDate(lineHistory, dateString) {
     return result;
 }
 export function searchByKeyword(lineHistory, keyword) {
+    currentDate = undefined;
     let counter = 0;
     let result = "";
-    let date = new Date(1, 1, 1);
-    let max_date = new Date(1970, 1, 1);
+    let date = new Date(0);
     let countStart = -1;
     if (keyword.length == 1) {
         result += "注意: 1文字検索は大量にヒットする可能性があり、リソースの消費量が多くなる可能性があります。<br><br>";
     }
     keyword = keyword.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    for (let i = 0; i < lineHistory.historyData.length; i++) {
-        let line = lineHistory.historyData[i];
+    lineHistory.historyData.forEach((line, index) => {
         if (RE_DATE.test(line)) {
             const dateTmp = generateDate(line.substring(0, 10));
-            if (dateTmp.getTime() >= max_date.getTime()) {
+            if (dateTmp.getTime() >= date.getTime()) {
                 date = generateDate(line.substring(0, 10));
-                max_date = date;
-                countStart = i;
+                countStart = index;
             }
         }
         else if (line.search(keyword) != -1) {
@@ -66,16 +64,13 @@ export function searchByKeyword(lineHistory, keyword) {
             if (line.length >= 60) {
                 line = `${line.substring(0, 60)}...`;
             }
-            const lineCount = i - countStart;
-            const year = date.getFullYear();
-            const month = utl.zeroPadding(date.getMonth() + 1, 2);
-            const day = utl.zeroPadding(date.getDate(), 2);
-            const dateString = `${year}/${month}/${day}`;
+            const lineCount = index - countStart;
+            const ymd = utl.newYMDString(date);
+            const dateString = `${ymd.year}/${ymd.month}/${ymd.day}`;
             result += `<a href="javascript:runSearchByDate('${dateString}', '${lineCount}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineCount}</spam></a> ${line} <br>`;
         }
-    }
-    result = result == "" ? "見つかりませんでした。" : result;
-    currentDate = undefined;
+    });
+    result = (result == "") ? "見つかりませんでした。" : result;
     return `<h3 style="display:inline">${counter}件</h3><br><br>${result}`;
 }
 export function searchByRandom(lineHistory) {
@@ -88,12 +83,12 @@ function calcDateIndices(lines) {
     const result = {};
     let current = new Date(1, 1, 1);
     lines.forEach((line, index) => {
-        if (RE_DATE.test(line)) {
-            const dateTmp = generateDate(line.substring(0, 10));
-            if (dateTmp.getTime() >= current.getTime()) {
-                current = dateTmp;
-                result[dateTmp.toLocaleDateString()] = index;
-            }
+        if (RE_DATE.test(line) == false)
+            return;
+        const dateTmp = generateDate(line.substring(0, 10));
+        if (dateTmp.getTime() >= current.getTime()) {
+            current = dateTmp;
+            result[dateTmp.toLocaleDateString()] = index;
         }
     });
     return result;
@@ -103,7 +98,6 @@ function createLineWithTime(line, lineCount, currentDate) {
     if (lineInfo.length >= 2) {
         lineInfo[0] = `<a href="javascript:showLineInfoAlert('${currentDate?.toLocaleDateString()}',${lineCount});">${lineInfo[0]}</a>`;
     }
-    console.log(`[${lineInfo.join("\t")}]`);
     return `<span id="${lineCount}">${lineInfo.join("\t")}</span><br>`;
 }
 function checkDate(year = 1970, month = 1, day = 1) {
@@ -112,21 +106,19 @@ function checkDate(year = 1970, month = 1, day = 1) {
         && 1 <= day && day <= 31;
 }
 function generateDate(dateString) {
-    const splitDate = dateString.split("/");
+    const dateInfo = dateString.split("/").map(value => parseInt(value));
+    if (dateInfo.length != 3) {
+        return new Date(0);
+    }
+    const year = dateInfo[0];
+    const month = dateInfo[1];
+    const day = dateInfo[2];
     let result;
-    if (splitDate.length != 3) {
-        result = new Date(1970, 1, 1);
+    if (checkDate(year, month, day)) {
+        result = new Date(year, month - 1, day);
     }
     else {
-        const year = parseInt(splitDate[0]);
-        const month = parseInt(splitDate[1]);
-        const day = parseInt(splitDate[2]);
-        if (checkDate(year, month, day)) {
-            result = new Date(year, month - 1, day);
-        }
-        else {
-            result = new Date(1970, 1, 1);
-        }
+        result = new Date(0);
     }
     return result;
 }

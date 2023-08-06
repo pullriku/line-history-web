@@ -103,37 +103,33 @@ function initGlobalFunctions() {
         const result = his.searchByDate(lineHistory, date);
         writeResult(result, outputField);
     
-        if(id != undefined) {
-            document.getElementById(id)?.scrollIntoView(true);
-        }
+        if(id == undefined) return;
+        document.getElementById(id)?.scrollIntoView(true);
     };
     
     window.showLineInfoAlert = (date: string, lineNumber: number): void => {
-        const info = date.split("/").slice(0, 3);
+        const info = date
+            .split("/")
+            .slice(0, 3)
+            .map((value) => parseInt(value))
+            .map(value => utl.zeroPadding(value, 2));
     
-        const year = Number.parseInt(info[0]);
-        const month = utl.zeroPadding(Number.parseInt(info[1]), 2);
-        const day = utl.zeroPadding(Number.parseInt(info[2]), 2);
-    
-        alert(`この行の情報:\n${year}/${month}/${day}@${lineNumber}`);
+        alert(`この行の情報:\n${info[0]}/${info[1]}/${info[2]}@${lineNumber}`);
     };
 }
 
 function initOutputField() {
-    if (outputField?.innerHTML) {
-        outputField.innerHTML = `
-            <br>
-            Welcome back<br>
-            <br>
-            `
-    }
+    if(outputField?.innerHTML == undefined) return;
+    outputField.innerHTML = `
+        <br>
+        Welcome back<br>
+        <br>
+    `;
 }
 
 function initCurrentDateField() {
-    const today = new Date();
-    const monthString = utl.zeroPadding(today.getMonth()+1, 2);
-    const dayString = utl.zeroPadding(today.getDate(), 2);
-    currentDateField.value = `${today.getFullYear()}-${monthString}-${dayString}`;
+    const ymd = utl.newYMDString(new Date());
+    currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
 }
 
 /**
@@ -148,11 +144,12 @@ function initSpecialMessageIfNeeded() {
     n周年記念日の表示
     毎年2/10から2/16に表示
     */
-    // const today = new Date(2023,2-1,10);
+//    const today = new Date(2020,1-1,1);
     const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const day = today.getDate();
+    const ymd = utl.newYMDString(today);
+    const year = parseInt(ymd.year);
+    const month = parseInt(ymd.month);
+    const day = parseInt(ymd.day);
     const yearDiff = year - 2022;
 
     let message = "";
@@ -220,7 +217,6 @@ function initSpecialMessageIfNeeded() {
     specialMessage.innerHTML = message;
 }
 
-
 function drawErrorMessageIfNeeded() {
     if (lineHistory == undefined || his.lineHistoryExists(lineHistory) == false) {
         outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
@@ -239,15 +235,13 @@ function writeResult(result: string, htmlElement: HTMLElement): void {
     if (htmlElement?.innerHTML && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
-    
-    if(currentDateField){
-        const currentDate = his.currentDate;
-        if(currentDate != undefined){
-            const month = utl.zeroPadding(currentDate.getMonth() + 1, 2);
-            const date = utl.zeroPadding(currentDate.getDate(), 2);
-            currentDateField.value = `${currentDate?.getFullYear()}-${month}-${date}`;
-        } else {
-            currentDateField.value = "";
-        }
+
+    const currentDate = his.currentDate;
+    if (currentDate == undefined) {
+        currentDateField.value = "";
+        return;
     }
+
+    const ymd = utl.newYMDString(currentDate);
+    currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
 }
