@@ -1,8 +1,8 @@
-import * as utl from "./utils.js";
 const RE_DATE = /^20\d{2}\/\d{1,2}\/\d{1,2}\(.+\)\r?$/g;
 const RE_YEAR = /^20\d{2}/g;
 const RE_MONTH_DAY = /\d{2}/g;
 const RE_DATE_NO_WEEK = /^20\d{2}\/\d{1,2}\/\d{1,2}$/g;
+const RE_TIME = /^(\d{2}):(\d{2}).*/;
 export let currentDate;
 export function newLineHistory(data) {
     const _data = data
@@ -58,15 +58,14 @@ export function searchByKeyword(lineHistory, keyword) {
         }
         else if (line.search(keyword) != -1) {
             counter++;
-            if (/\d{2}:\d{2}.*/.test(line)) {
+            if (RE_TIME.test(line)) {
                 line = line.substring(6);
             }
             if (line.length >= 60) {
                 line = `${line.substring(0, 60)}...`;
             }
             const lineCount = index - countStart;
-            const ymd = utl.newYMDString(date);
-            const dateString = `${ymd.year}/${ymd.month}/${ymd.day}`;
+            const dateString = date.toLocaleDateString();
             result += `<a href="javascript:runSearchByDate('${dateString}', '${lineCount}');" id="dateLink"><spam style="font-weight: bold;">${dateString}@${lineCount}</spam></a> ${line} <br>`;
         }
     });
