@@ -146,10 +146,10 @@ function initSpecialMessageIfNeeded() {
     */
 //    const today = new Date(2020,1-1,1);
     const today = new Date();
-    const ymd = utl.newYMDString(today);
-    const year = parseInt(ymd.year);
-    const month = parseInt(ymd.month);
-    const day = parseInt(ymd.day);
+    const ymd = utl.newYMDInt(today);
+    const year = ymd.year;
+    const month = ymd.month;
+    const day = ymd.day;
     const yearDiff = year - 2022;
 
     let message = "";

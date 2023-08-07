@@ -133,10 +133,16 @@ function createLineWithTime(line: string, lineCount: number, currentDate?: Date)
     return `<span id="${lineCount}">${lineInfo.join("\t")}</span><br>`;
 }
 
-function checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {
-    return year >= 1970
-        && 1 <= month && month <= 12
-        && 1 <= day && day <= 31;
+// function checkDate(year: number = 1970, month: number = 1, day: number = 1): boolean {
+//     return year >= 1970
+//         && 1 <= month && month <= 12
+//         && 1 <= day && day <= 31;
+// }
+
+function checkDate(ymd: utl.YMDInt): boolean {
+    return ymd.year >= 1970
+        && 1 <= ymd.month && ymd.month <= 12
+        && 1 <= ymd.day && ymd.day <= 31;
 }
 
 function generateDate(dateString: string): Date {
@@ -145,13 +151,15 @@ function generateDate(dateString: string): Date {
         return new Date(0);
     }
 
-    const year = dateInfo[0];
-    const month = dateInfo[1];
-    const day = dateInfo[2];
+    const ymd: utl.YMDInt = {
+        year: dateInfo[0],
+        month: dateInfo[1],
+        day: dateInfo[2],
+    }
     
     let result: Date;
-    if (checkDate(year, month, day)) {
-        result = new Date(year, month - 1, day);
+    if (checkDate(ymd)) {
+        result = utl.ymdToDate(ymd);
     } else {
         result = new Date(0);
     }

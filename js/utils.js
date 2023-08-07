@@ -11,3 +11,13 @@ export function newYMDString(date) {
         day: zeroPadding(date.getDate(), 2),
     };
 }
+export function newYMDInt(date) {
+    return {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+    };
+}
+export function ymdToDate(ymd) {
+    return new Date(ymd.year, ymd.month - 1, ymd.day);
+}
