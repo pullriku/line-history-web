@@ -32,6 +32,8 @@ function initEventListeners() {
     const wordSubmitButton = document.getElementById("wordSubmitButton");
     wordSubmitButton?.addEventListener("click", () => {
         const inputWord = wordInputField?.value;
+        if (inputWord == undefined || inputWord == "")
+            return;
         drawErrorMessageIfNeeded();
         const result = his.searchByKeyword(lineHistory, inputWord);
         writeResult(result, outputField);
@@ -123,7 +125,7 @@ function initSpecialMessageIfNeeded() {
     const month = ymd.month;
     const day = ymd.day;
     const yearDiff = year - 2022;
-    let message = "";
+    let message;
     if (month == 2 && 10 <= day && day <= 16) {
         let ordinal; // 序数詞
         const onesPlace = yearDiff % 10;
@@ -204,6 +206,7 @@ function initSpecialMessageIfNeeded() {
         message = "今年もありがとうございました";
     }
     else {
+        message = "";
         specialMessage.style.display = "none";
     }
     specialMessage.innerHTML = message;
