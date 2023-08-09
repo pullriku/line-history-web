@@ -178,6 +178,9 @@ function initSpecialMessageIfNeeded() {
     else if (month == 7 && day == 7) {
         message = "🎋🌠";
     }
+    else if (month == 8 && day == 10) {
+        message = `Web版HistoryViewerの日(${yearDiff}周年)`;
+    }
     else if (month == 8 && day == 11) {
         message = "山の日";
     }
