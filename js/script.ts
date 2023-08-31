@@ -38,7 +38,6 @@ function initEventListeners() {
             const text = reader.result ?? "";
             if (typeof text == "string") {
                 // lineHistory = his.newLineHistory(text);
-
                 lineHistory = new wasm.LineHistoryWrapper(text);
             }
     
