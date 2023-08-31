@@ -4,20 +4,14 @@
  */
 
 import * as utl from "./utils.js";
-// import * as his from "./history.js";
-import init, * as wasm from "../history-viewer-wasm/pkg/history_viewer_wasm.js"
+import * as his from "./history.js";
 
 
 const outputField = document.getElementById("outputField") as HTMLElement;
 const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
 // let lineHistory: his.LineHistory;
-let lineHistory: wasm.LineHistoryWrapper;
-let currentDate: Date | undefined;
-
-init().then(() => {
-    main();
-});
-
+let lineHistory: his.LineHistory;
+main();
 
 function main() {
     initEventListeners();
@@ -37,8 +31,7 @@ function initEventListeners() {
         reader.onload = (e) => {
             const text = reader.result ?? "";
             if (typeof text == "string") {
-                // lineHistory = his.newLineHistory(text);
-                lineHistory = new wasm.LineHistoryWrapper(text);
+                lineHistory = his.newLineHistory(text);
             }
     
         }
@@ -50,8 +43,7 @@ function initEventListeners() {
         const inputWord = (wordInputField as HTMLInputElement)?.value;
         if(inputWord == undefined || inputWord == "") return;
         drawErrorMessageIfNeeded();
-        // const result = his.searchByKeyword(lineHistory, inputWord);
-        const result = lineHistory.search_by_keyword(inputWord);
+        const result = his.searchByKeyword(lineHistory, inputWord);
         writeResult(result, outputField);
     });
     
@@ -63,19 +55,18 @@ function initEventListeners() {
     const randomSubmitButton = document.getElementById("randomSubmitButton");
     randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
-        // const result = his.searchByRandom(lineHistory);
-        const result = lineHistory.search_by_random();
+        const result = his.searchByRandom(lineHistory);
         writeResult(result, outputField);
     });
     
     const previousDateButton = document.getElementById("previousDateButton");
     previousDateButton?.addEventListener("click", () => {
-        const current = currentDate;
+        const current = his.currentDate;
         
         if(current != undefined){
             drawErrorMessageIfNeeded();
-            // const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
-            const result = lineHistory.search_by_date(current.getFullYear(), current.getMonth() + 1, current.getDate() - 1);
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
     });
