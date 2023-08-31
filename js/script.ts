@@ -4,19 +4,13 @@
  */
 
 import * as utl from "./utils.js";
-// import * as his from "./history.js";
-import init, * as wasm from "../history-viewer-wasm/pkg/history_viewer_wasm.js"
+import * as his from "./history.js";
 
 
 const outputField = document.getElementById("outputField") as HTMLElement;
 const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
-// let lineHistory: his.LineHistory;
-let lineHistory: wasm.LineHistoryWrapper;
-let currentDate: Date | undefined;
-
-init().then(() => {
-    main();
-});
+let lineHistory: his.LineHistory;
+main();
 
 
 function main() {
@@ -37,9 +31,7 @@ function initEventListeners() {
         reader.onload = (e) => {
             const text = reader.result ?? "";
             if (typeof text == "string") {
-                // lineHistory = his.newLineHistory(text);
-
-                lineHistory = new wasm.LineHistoryWrapper(text);
+                lineHistory = his.newLineHistory(text);
             }
     
         }
@@ -51,8 +43,7 @@ function initEventListeners() {
         const inputWord = (wordInputField as HTMLInputElement)?.value;
         if(inputWord == undefined || inputWord == "") return;
         drawErrorMessageIfNeeded();
-        // const result = his.searchByKeyword(lineHistory, inputWord);
-        const result = lineHistory.search_by_keyword(inputWord);
+        const result = his.searchByKeyword(lineHistory, inputWord);
         writeResult(result, outputField);
     });
     
@@ -64,41 +55,37 @@ function initEventListeners() {
     const randomSubmitButton = document.getElementById("randomSubmitButton");
     randomSubmitButton?.addEventListener("click", () => {
         drawErrorMessageIfNeeded();
-        // const result = his.searchByRandom(lineHistory);
-        const result = lineHistory.search_by_random();
+        const result = his.searchByRandom(lineHistory);
         writeResult(result, outputField);
     });
     
     const previousDateButton = document.getElementById("previousDateButton");
     previousDateButton?.addEventListener("click", () => {
-        const current = currentDate;
+        const current = his.currentDate;
         
         if(current != undefined){
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
             drawErrorMessageIfNeeded();
-            // const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
-            const result = lineHistory.search_by_date(current.getFullYear(), current.getMonth() + 1, current.getDate() - 1);
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
     });
     
     const nextDateButton = document.getElementById("nextDateButton");
     nextDateButton?.addEventListener("click", () => {
-        const current = currentDate;
+        const current = his.currentDate;
     
         if(current != undefined){
             const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
             drawErrorMessageIfNeeded();
-            // const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
-            const result = lineHistory.search_by_date(current.getFullYear(), current.getMonth() + 1, current.getDate() + 1);
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
             writeResult(result, outputField);
         }
     });
     
     currentDateField?.addEventListener("change", () => {
         drawErrorMessageIfNeeded();
-        // const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
-        const ymd = currentDateField?.value.split("-").map(value => parseInt(value));
-        const result = lineHistory.search_by_date(ymd[0], ymd[1], ymd[2]);
+        const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
         writeResult(result, outputField);
     });
 }
@@ -114,9 +101,7 @@ function initGlobalFunctions() {
     window.runSearchByDate = (date: string, id?: string): void => {
         const outputField = document.getElementById("outputField") as HTMLElement;
         drawErrorMessageIfNeeded();
-        // const result = his.searchByDate(lineHistory, date);
-        const ymd = date.split("/").map(value => parseInt(value));
-        const result = lineHistory.search_by_date(ymd[0], ymd[1], ymd[2]);
+        const result = his.searchByDate(lineHistory, date);
         writeResult(result, outputField);
     
         if(id == undefined) return;
@@ -238,7 +223,7 @@ function initSpecialMessageIfNeeded() {
 
 
 function drawErrorMessageIfNeeded() {
-    if (lineHistory == undefined) {
+    if (lineHistory == undefined || his.lineHistoryExists(lineHistory) == false) {
         outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
     }
 }
@@ -256,6 +241,7 @@ function writeResult(result: string, htmlElement: HTMLElement): void {
         htmlElement.innerHTML = addAsterisk(result);
     }
 
+    const currentDate = his.currentDate;
     if (currentDate == undefined) {
         currentDateField.value = "";
         return;
