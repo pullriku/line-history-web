@@ -6,7 +6,7 @@
     --menu-color: #f6f5eb;
     --text-color: black;
     --output-border: border-top: 0px;
-    --background-gradient: linear-gradient(to bottom, rgb(107, 148, 243), #f2f2f7);
+    --background-gradient: linear-gradient(to bottom, rgb(222, 147, 36), #f2f2f7);
     --link-color: blue;
     --gray-bar: #e2e2e2;
     /* --settings-color: lightgray */
@@ -109,7 +109,16 @@ nav{
     display: flex;
     /* background-color: #F2F2F7; */
     padding: 0px 10px;
-    border-radius: 20px;
+    /* border-radius: 20px; */
+    /* padding: 10px; */
+}
+
+nav * {
+    margin-left: 10px;
+}
+nav span {
+    padding: 10px;
+    background-color: white;
 }
 
 nav ul{
@@ -213,11 +222,13 @@ p{
     border-bottom: var(--text-color) 1.5px solid;
 }
 
-.dateChangeButton {
+input[type="date"] {
     border: none;
     padding: 0.3rem 1.4rem;
     font-size: 1.4rem;
     height: auto;
+    border: 2px solid blue;
+    border-radius: 10px;
 }
 
 #currentDateField { 

@@ -7,17 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link id="cssSelector" rel="stylesheet" href="style.css">
-    <title>History Viewer</title>
+    <title>History Guesser</title>
 </head>
 
 <body>
     <header>
         <ul>
             <li><img src="./icon/icon.png" alt=""></li>
-            <li id="title">History Viewer<div id="specialMessage"></div></li>
+            <li id="title">History Guesser<div id="specialMessage"></div></li>
         </ul>
     </header>
     <main>
+        <nav>
+            <button type="button" id="restartButton">リスタート</button>
+            <span id="stageField">ステージ</span>
+            <span id="scoreField">スコア</span>
+        </nav>
+
         <div class="menu">
             <p>
                 📝履歴ファイルを選択:
@@ -25,7 +31,7 @@
             </p>
         </div>
         <div class="menu">
-            <p>
+            <!-- <p>
                 <label for="dateTimeInput">💬検索: </label><br>
                 <input type="text" id="wordInput">
                 <button type="button" id="wordSubmitButton">確定</button>
@@ -33,9 +39,12 @@
             <p>
                 <label for="">🎲ランダム表示:</label><br>
                 <button type="button" id="randomSubmitButton">確定</button>
-            </p>
+            </p> -->
+            <h2>履歴の日付を当てよう</h2>
+            <input type="date" name="" id="datePicker" value="">
+            <button type="button" id="dateSubmitButton">確定</button>
         </div>
-        <div id="changeButtonArea">
+        <!-- <div id="changeButtonArea">
             <ul>
                 <li>
                     <button type="button" class="dateChangeButton" id="previousDateButton">👈</button>
@@ -48,7 +57,7 @@
                 </li>
             </ul>
 
-        </div>
+        </div> -->
         <div id="outputField">
             エラー。<br>
             JavaScriptを有効にしてください。
