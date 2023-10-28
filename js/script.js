@@ -5,22 +5,15 @@
 import * as utl from "./utils.js";
 import * as his from "./history.js";
 const outputField = document.getElementById("outputField");
-const scoreField = document.getElementById("scoreField");
-const stageField = document.getElementById("stageField");
-const datePicker = document.getElementById("datePicker");
-// const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
+const currentDateField = document.getElementById("currentDateField");
 let lineHistory;
-let date;
-let correctDateString;
-let score = 0;
-let stage = 1;
 main();
 function main() {
     initEventListeners();
-    // initGlobalFunctions();
-    // initCurrentDateField();
+    initGlobalFunctions();
+    initSpecialMessageIfNeeded();
+    initCurrentDateField();
     initOutputField();
-    writeScore(0);
 }
 function initEventListeners() {
     const fileField = document.getElementById("file");
@@ -33,133 +26,72 @@ function initEventListeners() {
             if (typeof text == "string") {
                 lineHistory = his.newLineHistory(text);
             }
-            game();
         };
     }, false);
-    datePicker?.addEventListener("change", (e) => {
-        const _date = e.target?.value ?? "";
-        if (_date == "")
-            return;
-        date = _date.replace(/-/g, "/");
-    }, false);
-    const dateSubmitButton = document.getElementById("dateSubmitButton");
-    dateSubmitButton?.addEventListener("click", () => {
-        if (date == undefined)
+    const wordInputField = document.getElementById("wordInput");
+    const wordSubmitButton = document.getElementById("wordSubmitButton");
+    wordSubmitButton?.addEventListener("click", () => {
+        const inputWord = wordInputField?.value;
+        if (inputWord == undefined || inputWord == "")
             return;
         drawErrorMessageIfNeeded();
-        if (correctDateString == undefined)
+        const result = his.searchByKeyword(lineHistory, inputWord);
+        writeResult(result, outputField);
+    });
+    wordInputField?.addEventListener("keyup", (e) => {
+        if (e.key == "Enter")
+            wordSubmitButton?.dispatchEvent(new Event("click"));
+    });
+    const randomSubmitButton = document.getElementById("randomSubmitButton");
+    randomSubmitButton?.addEventListener("click", () => {
+        drawErrorMessageIfNeeded();
+        const result = his.searchByRandom(lineHistory);
+        writeResult(result, outputField);
+    });
+    const previousDateButton = document.getElementById("previousDateButton");
+    previousDateButton?.addEventListener("click", () => {
+        const current = his.currentDate;
+        if (current != undefined) {
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
+            drawErrorMessageIfNeeded();
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
+            writeResult(result, outputField);
+        }
+    });
+    const nextDateButton = document.getElementById("nextDateButton");
+    nextDateButton?.addEventListener("click", () => {
+        const current = his.currentDate;
+        if (current != undefined) {
+            const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+            drawErrorMessageIfNeeded();
+            const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
+            writeResult(result, outputField);
+        }
+    });
+    currentDateField?.addEventListener("change", () => {
+        drawErrorMessageIfNeeded();
+        const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
+        writeResult(result, outputField);
+    });
+}
+function initGlobalFunctions() {
+    window.runSearchByDate = (date, id) => {
+        const outputField = document.getElementById("outputField");
+        drawErrorMessageIfNeeded();
+        const result = his.searchByDate(lineHistory, date);
+        writeResult(result, outputField);
+        if (id == undefined)
             return;
-        const correctDate = new Date(correctDateString);
-        const inputDate = new Date(date);
-        const diff = Math.abs(correctDate.getTime() - inputDate.getTime());
-        const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        const sumScore = 1000 - diffDays;
-        score += sumScore;
-        writeScore(score);
-        if (stage < 10) {
-            stage += 1;
-            writeScore(score);
-            game();
-        }
-        else {
-            flush();
-            outputField.innerHTML = `
-                <br>
-                お疲れ様でした。<br>
-                <br>
-                スコア: ${score}<br>
-                <br>
-                <button id="restartButton">もう一度</button>
-            `;
-        }
-    }, false);
-    const restartButton = document.getElementById("restartButton");
-    restartButton?.addEventListener("click", () => {
-        restart();
-    }, false);
-    // const wordInputField = document.getElementById("wordInput");
-    // const wordSubmitButton = document.getElementById("wordSubmitButton");
-    // wordSubmitButton?.addEventListener("click", () => {
-    //     const inputWord = (wordInputField as HTMLInputElement)?.value;
-    //     if(inputWord == undefined || inputWord == "") return;
-    //     drawErrorMessageIfNeeded();
-    //     const result = his.searchByKeyword(lineHistory, inputWord);
-    //     writeResult(result, outputField);
-    // });
-    // wordInputField?.addEventListener("keyup", (e) => {
-    //     if (e.key == "Enter")
-    //         wordSubmitButton?.dispatchEvent(new Event("click"));
-    // });
-    // const randomSubmitButton = document.getElementById("randomSubmitButton");
-    // randomSubmitButton?.addEventListener("click", () => {
-    //     drawErrorMessageIfNeeded();
-    //     const result = his.searchByRandom(lineHistory);
-    //     writeResult(result, outputField);
-    // });
-    // const previousDateButton = document.getElementById("previousDateButton");
-    // previousDateButton?.addEventListener("click", () => {
-    //     const current = his.currentDate;
-    //     if(current != undefined){
-    //         const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() - 1);
-    //         drawErrorMessageIfNeeded();
-    //         const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
-    //         writeResult(result, outputField);
-    //     }
-    // });
-    // const nextDateButton = document.getElementById("nextDateButton");
-    // nextDateButton?.addEventListener("click", () => {
-    //     const current = his.currentDate;
-    //     if(current != undefined){
-    //         const date = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
-    //         drawErrorMessageIfNeeded();
-    //         const result = his.searchByDate(lineHistory, date.toLocaleString().split(' ')[0]);
-    //         writeResult(result, outputField);
-    //     }
-    // });
-    // currentDateField?.addEventListener("change", () => {
-    //     drawErrorMessageIfNeeded();
-    //     const result = his.searchByDate(lineHistory, currentDateField?.value.replace(/-/g, "/"));
-    //     writeResult(result, outputField);
-    // });
-}
-// declare global {
-//     interface Window {
-//         runSearchByDate: Function;
-//         showLineInfoAlert: Function;
-//     }
-// }
-// function initGlobalFunctions() {
-//     window.runSearchByDate = (date: string, id?: string): void => {
-//         const outputField = document.getElementById("outputField") as HTMLElement;
-//         drawErrorMessageIfNeeded();
-//         const result = his.searchByDate(lineHistory, date);
-//         writeResult(result, outputField);
-//         if(id == undefined) return;
-//         document.getElementById(id)?.scrollIntoView(true);
-//     };
-//     window.showLineInfoAlert = (date: string, lineNumber: number): void => {
-//         const info = date
-//             .split("/")
-//             .slice(0, 3)
-//             .map((value) => parseInt(value))
-//             .map(value => utl.zeroPadding(value, 2));
-//         alert(`この行の情報:\n${info[0]}/${info[1]}/${info[2]}@${lineNumber}`);
-//     };
-// }
-function game() {
-    flush();
-    const dates = lineHistory.dateArray;
-    const randomDate = chooseOne(dates);
-    correctDateString = randomDate.split("/").map(value => utl.zeroPadding(parseInt(value), 2)).join("/");
-    const result = his.searchByDate(lineHistory, randomDate).split("<br>").slice(1, -3).join("<br>");
-    writeResult(result, outputField);
-}
-function chooseOne(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
-function flush() {
-    outputField.innerText = " ";
-    datePicker?.setAttribute("value", "");
+        document.getElementById(id)?.scrollIntoView(true);
+    };
+    window.showLineInfoAlert = (date, lineNumber) => {
+        const info = date
+            .split("/")
+            .slice(0, 3)
+            .map((value) => parseInt(value))
+            .map(value => utl.zeroPadding(value, 2));
+        alert(`この行の情報:\n${info[0]}/${info[1]}/${info[2]}@${lineNumber}`);
+    };
 }
 function initOutputField() {
     if (outputField?.innerHTML == undefined)
@@ -170,10 +102,118 @@ function initOutputField() {
         <br>
     `;
 }
-// function initCurrentDateField() {
-//     const ymd = utl.newYMDString(new Date());
-//     currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
-// }
+function initCurrentDateField() {
+    const ymd = utl.newYMDString(new Date());
+    currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
+}
+/**
+ * @description 特別なメッセージを表示する
+ */
+function initSpecialMessageIfNeeded() {
+    const specialMessage = document.getElementById("specialMessage");
+    if (specialMessage == undefined)
+        return;
+    specialMessage.style.display = "block";
+    /*
+    n周年記念日の表示
+    毎年2/10から2/16に表示
+    */
+    //    const today = new Date(2020,1-1,1);
+    const today = new Date();
+    const ymd = utl.newYMDInt(today);
+    const year = ymd.year;
+    const month = ymd.month;
+    const day = ymd.day;
+    const yearDiff = year - 2022;
+    let message;
+    if (month == 2 && 10 <= day && day <= 16) {
+        let ordinal; // 序数詞
+        const onesPlace = yearDiff % 10;
+        switch (onesPlace) {
+            case 1:
+                ordinal = "st";
+                break;
+            case 2:
+                ordinal = "nd";
+                break;
+            case 3:
+                ordinal = "rd";
+                break;
+            default:
+                ordinal = "th";
+                break;
+        }
+        message = `🎉${yearDiff}${ordinal} Anniv!`;
+    }
+    else if (month == 1 && day == 1) {
+        message = "HappyNewYear!";
+    }
+    else if (month == 1 && day <= 2 && day <= 3) {
+        message = "🎍🌅🎍";
+    }
+    else if (month == 2 && day == 3) {
+        message = "👹 🥜🥜🥜ミ";
+    }
+    else if (month == 2 && day == 23) {
+        message = "天皇誕生日";
+    }
+    else if (month == 3 && day == 3) {
+        message = "🎎🍡🌸";
+    }
+    else if (month == 4 && day == 29) {
+        message = "昭和の日";
+    }
+    else if (month == 5 && day == 3) {
+        message = "憲法記念日";
+    }
+    else if (month == 5 && day == 4) {
+        message = "みどりの日";
+    }
+    else if (month == 5 && day == 5) {
+        message = "こどもの日";
+    }
+    else if (month == 6 && day <= 21 && day <= 22) {
+        message = "☀️"; // 夏至
+    }
+    else if (month == 7 && day == 7) {
+        message = "🎋🌠";
+    }
+    else if (month == 8 && day == 10) {
+        message = `Web版HistoryViewerの日(${yearDiff}周年)`;
+    }
+    else if (month == 8 && day == 11) {
+        message = "山の日";
+    }
+    else if (month == 8 && today.getDay() == 0) {
+        message = "🎆🏮👘🎇";
+    }
+    else if (month == 9 && day == 3) {
+        message = "草の日";
+    }
+    else if (month == 10 && day == 31) {
+        message = "🎃👻💀";
+    }
+    else if (month == 11 && day == 3) {
+        message = "文化の日";
+    }
+    else if (month == 11 && day == 23) {
+        message = "勤労感謝の日";
+    }
+    else if (month == 12 && day <= 21 && day <= 22) {
+        message = "🌉🌙"; // 冬至
+    }
+    else if (month == 12 && day == 25) {
+        message = "🎄🎁";
+    }
+    else if (month == 12 && day <= 26 && day <= 31) {
+        message = "今年もありがとうございました";
+    }
+    else {
+        message = "";
+        specialMessage.style.display = "none";
+    }
+    specialMessage.innerHTML = message;
+}
 function drawErrorMessageIfNeeded() {
     if (lineHistory == undefined || his.lineHistoryExists(lineHistory) == false) {
         outputField.innerHTML = "⚠️履歴ファイルを選択してください。";
@@ -190,26 +230,11 @@ function writeResult(result, htmlElement) {
     if (htmlElement?.innerHTML && result != "") {
         htmlElement.innerHTML = addAsterisk(result);
     }
-    // const currentDate = his.currentDate;
-    // if (currentDate == undefined) {
-    //     currentDateField.value = "";
-    //     return;
-    // }
-    // const ymd = utl.newYMDString(currentDate);
-    // currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
-}
-function writeScore(score) {
-    if (scoreField?.innerHTML) {
-        scoreField.innerHTML = `スコア: ${score}`;
+    const currentDate = his.currentDate;
+    if (currentDate == undefined) {
+        currentDateField.value = "";
+        return;
     }
-    if (stageField?.innerHTML) {
-        stageField.innerHTML = `ステージ: ${stage}/10`;
-    }
-}
-function restart() {
-    score = 0;
-    stage = 1;
-    flush();
-    writeScore(score);
-    game();
+    const ymd = utl.newYMDString(currentDate);
+    currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
 }
