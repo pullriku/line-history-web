@@ -208,7 +208,7 @@ function initSpecialMessageIfNeeded() {
         message = "文化の日";
     } else if (month == 11 && day == 23) {
         message = "勤労感謝の日";
-    } else if (month == 12 && day <= 21 && day <= 22) {
+    } else if (month == 12 && 21 <= day && day <= 22) {
         message = "🌉🌙"; // 冬至
     } else if (month == 12 && day == 25) {
         message = "🎄🎁";

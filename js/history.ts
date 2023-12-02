@@ -38,7 +38,7 @@ export function lineHistoryExists(history: LineHistory): boolean {
 
 export function searchByDate(lineHistory: LineHistory, dateString: string): string {
     const dateInput = currentDate = generateDate(dateString);
-    const localeString = dateInput.toLocaleDateString();
+    const localeString = dateInput.toLocaleDateString("ja-JP");
     let result: string = "";
 
     const startLineNum = lineHistory.dateIndices[localeString];
