@@ -174,7 +174,7 @@ function initSpecialMessageIfNeeded() {
         message = `🎉${yearDiff}${ordinal} Anniv!`;
     } else if (month == 1 && day == 1) {
         message = "HappyNewYear!";
-    } else if (month == 1 && day <= 2 && day <= 3) {
+    } else if (month == 1 && 2 <= day && day <= 3) {
         message = "🎍🌅🎍";
     } else if (month == 2 && day == 3) {
         message = "👹 🥜🥜🥜ミ";
@@ -190,7 +190,7 @@ function initSpecialMessageIfNeeded() {
         message = "みどりの日";
     } else if (month == 5 && day == 5) {
         message = "こどもの日";
-    } else if (month == 6 && day <= 21 && day <= 22) {
+    } else if (month == 6 && 21 <= day && day <= 22) {
         message = "☀️"; // 夏至
     } else if (month == 7 && day == 7) {
         message = "🎋🌠";
@@ -212,7 +212,7 @@ function initSpecialMessageIfNeeded() {
         message = "🌉🌙"; // 冬至
     } else if (month == 12 && day == 25) {
         message = "🎄🎁";
-    } else if (month == 12 && day <= 26 && day <= 31) {
+    } else if (month == 12 && 26 <= day && day <= 31) {
         message = "今年もありがとうございました";
     } else {
         message = "";
