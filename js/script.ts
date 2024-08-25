@@ -6,19 +6,21 @@
 import * as utl from "./utils.js";
 import * as his from "./history.js";
 
-
 const outputField = document.getElementById("outputField") as HTMLElement;
 const currentDateField = document.getElementById("currentDateField") as HTMLInputElement;
+const dailySentence = document.getElementById("dailySentence");
+
 let lineHistory: his.LineHistory;
 main();
 
 
-function main() {
+async function main() {
     initEventListeners();
     initGlobalFunctions();
     initSpecialMessageIfNeeded();
     initCurrentDateField();
     initOutputField();
+    await aiSentence();
 }
 
 function initEventListeners() {
@@ -249,4 +251,39 @@ function writeResult(result: string, htmlElement: HTMLElement): void {
 
     const ymd = utl.newYMDString(currentDate);
     currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
+}
+
+declare global {
+    interface Window {
+        ai: AI;
+    }
+    
+    interface AI {
+        canCreateTextSession: () => Promise<boolean>;
+        createTextSession: () => Promise<any>;
+    }
+}
+
+
+async function aiSentence() {
+    if (dailySentence == undefined) {
+        return;
+    }
+
+    const prompt = "人生とは何？簡潔に";
+    try {
+        if (await window.ai.canCreateTextSession() == false) {
+            return;
+        }
+
+        const session = await window.ai.createTextSession();
+
+        const result = await session.prompt(prompt);
+
+        dailySentence.innerText = result;
+    } catch (error: any) {
+        console.log("browser is not PC Chrome.");
+        
+        console.log(error);
+    }
 }

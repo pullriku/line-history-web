@@ -6,14 +6,16 @@ import * as utl from "./utils.js";
 import * as his from "./history.js";
 const outputField = document.getElementById("outputField");
 const currentDateField = document.getElementById("currentDateField");
+const dailySentence = document.getElementById("dailySentence");
 let lineHistory;
 main();
-function main() {
+async function main() {
     initEventListeners();
     initGlobalFunctions();
     initSpecialMessageIfNeeded();
     initCurrentDateField();
     initOutputField();
+    await aiSentence();
 }
 function initEventListeners() {
     const fileField = document.getElementById("file");
@@ -237,4 +239,22 @@ function writeResult(result, htmlElement) {
     }
     const ymd = utl.newYMDString(currentDate);
     currentDateField.value = `${ymd.year}-${ymd.month}-${ymd.day}`;
+}
+async function aiSentence() {
+    if (dailySentence == undefined) {
+        return;
+    }
+    const prompt = "人生とは何？簡潔に";
+    try {
+        if (await window.ai.canCreateTextSession() == false) {
+            return;
+        }
+        const session = await window.ai.createTextSession();
+        const result = await session.prompt(prompt);
+        dailySentence.innerText = result;
+    }
+    catch (error) {
+        console.log("browser is not PC Chrome.");
+        console.log(error);
+    }
 }
