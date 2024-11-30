@@ -265,6 +265,9 @@ declare global {
 }
 
 
+/**
+ * Google Jemini Nanoによる文章生成
+ */
 async function aiSentence() {
     if (dailySentence == undefined) {
         return;
@@ -282,8 +285,6 @@ async function aiSentence() {
 
         dailySentence.innerText = result;
     } catch (error: any) {
-        console.log("browser is not PC Chrome.");
-        
-        console.log(error);
+        console.log("browser is not PC Chrome.\n" + error);
     }
 }

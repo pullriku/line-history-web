@@ -254,7 +254,6 @@ async function aiSentence() {
         dailySentence.innerText = result;
     }
     catch (error) {
-        console.log("browser is not PC Chrome.");
-        console.log(error);
+        console.log("browser is not PC Chrome.\n" + error);
     }
 }
