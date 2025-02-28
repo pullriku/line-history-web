@@ -142,8 +142,8 @@ checksum = "875b3680cb2f8f71bdcf9a30f38d48282f5d3c95cbf9b3fa57269bb5d5c06828"
 
 [[package]]
 name = "line-history"
-version = "0.14.0"
-source = "git+https://github.com/pullriku/line-history-rs.git#2b0bdfd9aa8b8f2a6118d723102e8b18be345898"
+version = "0.15.0"
+source = "git+https://github.com/pullriku/line-history-rs.git#122d63d3ef44edb5c9ea54474cb338f859090abd"
 dependencies = [
  "chrono",
  "rand",
