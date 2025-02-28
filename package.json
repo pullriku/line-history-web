@@ -1,21 +1,25 @@
 {
-  "name": "historyviewer",
-  "version": "1.0.0",
-  "description": "historyviewer",
-  "main": "./js/script.js",
-  "dependencies": {
-    "typescript": "^4.9.5"
-  },
-  "scripts": {
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TyomoGit/HistoryViewerJavaScriptEdition.git"
-  },
-  "author": "TyomoGit",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TyomoGit/HistoryViewerJavaScriptEdition/issues"
-  },
-  "homepage": "https://tyomogit.github.io/HistoryViewerJavaScriptEdition/index.html"
+	"name": "my-line-viewer",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "yarn rust &&astro --root front dev",
+		"build": "yarn rust && astro --root front build",
+		"preview": "astro --root front preview",
+		"astro": "astro --root front",
+		"rust": "wasm-pack build --target web rust-bind"
+	},
+	"dependencies": {
+		"@astrojs/preact": "^4.0.5",
+		"@tailwindcss/typography": "^0.5.16",
+		"@tailwindcss/vite": "^4.0.9",
+		"@types/dompurify": "^3.2.0",
+		"astro": "^5.4.0",
+		"preact": "^10.26.3",
+		"tailwindcss": "^4.0.9"
+	},
+	"packageManager": "yarn@4.6.0",
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4"
+	}
 }
