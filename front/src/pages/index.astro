@@ -3,8 +3,10 @@
 import "../styles/global.css";
 import LineViewer from "../components/LineViewer";
 import Base from "../layouts/Base.astro";
+import EventMessage from "../components/EventMessage";
 ---
 
 <Base>
+    <EventMessage />
     <LineViewer client:load />
 </Base>
