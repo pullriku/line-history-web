@@ -6,8 +6,3 @@ export interface LineMessage {
 	sender: string;
 	content: string;
 }
-
-export interface DateStats {
-	date: string;
-	messageCount: number;
-}

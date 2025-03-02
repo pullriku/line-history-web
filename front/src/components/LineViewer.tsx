@@ -21,7 +21,6 @@ export default function LineViewer(): JSX.Element {
 		setSelectedDate(date);
 		if (date === "") {
 			// すべての日付を選択した場合
-			//
 		} else {
 			// 特定の日付のみをフィルタリング
 			const day = history?.search_by_date(stringToDate(date));

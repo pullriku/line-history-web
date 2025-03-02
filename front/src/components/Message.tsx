@@ -3,9 +3,10 @@ import type { LineMessage } from "../types";
 
 interface MessageProps {
 	message: LineMessage;
+	iconBgColor: string;
 }
 
-export default function Message({ message }: MessageProps): JSX.Element {
+export default function Message({ message, iconBgColor }: MessageProps): JSX.Element {
 	// URLをリンクに変換する関数
 	const linkifyContent = (content: string): (string | JSX.Element)[] => {
 		const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -31,7 +32,7 @@ export default function Message({ message }: MessageProps): JSX.Element {
 		<div class="mb-4">
 			<div class="flex items-center mb-1">
 				{/* 送信者のアバター */}
-				<div class="w-6 h-6 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs mr-2">
+				<div style={{ backgroundColor: iconBgColor }} class={`w-6 h-6 rounded-full text-white flex items-center justify-center text-xs mr-2`}>
 					{message.sender.charAt(0)}
 				</div>
 

@@ -2,6 +2,8 @@
 import { useRef, useEffect } from "preact/hooks";
 import type { LineMessage } from "../types";
 import Message from "./Message";
+import SystemMessage from "./SystemMessage";
+import { getRandomDarkColor } from "../lib/color";
 
 interface MessageListProps {
 	messages: LineMessage[];
@@ -11,7 +13,15 @@ export default function MessageList({
 	messages,
 }: MessageListProps): JSX.Element {
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const uniqueSenders = [...new Set(messages.map((msg) => msg.sender))];
+	const uniqueSendersSet = new Set(messages.map((msg) => msg.sender));
+	uniqueSendersSet.delete("");
+	const uniqueSenders = [...uniqueSendersSet];
+
+	const uniqueColors = uniqueSenders.map(getRandomDarkColor);
+	const sender2Color: Record<string, string> = {};
+	uniqueSenders.forEach((sender, index) => {
+		sender2Color[sender] = uniqueColors[index];
+	});
 
 	useEffect(() => {
 		// メッセージリストが更新されたら一番上にスクロール
@@ -55,7 +65,7 @@ export default function MessageList({
 
 			<div
 				ref={containerRef}
-				class="p-4 max-h-[90vh] overflow-y-auto bg-gray-50"
+				class="p-4 h-max bg-gray-50"
 			>
 				{Object.entries(messagesByDate).map(([date, dateMessages]) => (
 					<div key={date}>
@@ -66,7 +76,9 @@ export default function MessageList({
 						</div>
 
 						{dateMessages.map((msg, index) => (
-							<Message key={`${date}-${index}`} message={msg} />
+							msg.sender !== ""
+								? <Message key={`${date}-${index}`} message={msg} iconBgColor={sender2Color[msg.sender]} />
+								: <SystemMessage message={msg} />
 						))}
 					</div>
 				))}
